@@ -1,0 +1,5 @@
+APP_NAME = "DevMind AI"
+
+APP_VERSION = "0.1.0"
+
+PERSONALITY_VERSION = "1.0"

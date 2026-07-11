@@ -1,12 +1,13 @@
 from fastapi import APIRouter
 from app.models.chat import ChatRequest, ChatResponse
 from app.services.ai_service import AIService
+from app.agents.devmind_agent import DevMindAgent
 
 router = APIRouter()
 
-ai_service = AIService()
+agent = DevMindAgent()
 
 @router.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
-    response = ai_service.get_response(request.message)
+    response = agent.chat(request.message)
     return ChatResponse(response = response)
