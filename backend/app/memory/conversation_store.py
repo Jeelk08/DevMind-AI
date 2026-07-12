@@ -76,3 +76,15 @@ class ConversationStore:
             }
             for row in rows
         ]
+
+    def delete_messages(self, session_id):
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            DELETE FROM messages
+            WHERE session_id = ?
+            """, (session_id,))
+        
+        conn.commit()
+        conn.close()

@@ -15,7 +15,7 @@ class SessionManager:
         cursor.execute("""
             INSERT INTO sessions(
                        id, 
-                       created_ai
+                       created_at
             )
             VALUES (?, ?)
             """, (
