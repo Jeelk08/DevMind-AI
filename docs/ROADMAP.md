@@ -166,6 +166,7 @@ Target Features
 
 ---
 
+
 # Guiding Principle
 
 Every feature added to DevMind AI should answer one question:

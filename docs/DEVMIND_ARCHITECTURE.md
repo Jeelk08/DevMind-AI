@@ -1,7 +1,7 @@
 # DevMind AI Architecture
 
-> Version: 1.0
-> Status: Draft
+> Version: v0.3.0
+> Status: Active Development
 > Author: Jeel Koradiya
 
 ---
@@ -36,7 +36,7 @@ An assistant capable of:
 - Planning software
 - Assisting development
 - Learning project context
-- Coordinating specialized AI tools
+- Coordinating specialized tools through an extensible tool-calling framework.
 
 ---
 
@@ -96,29 +96,30 @@ Transform DevMind AI into an intelligent engineering teammate capable of assisti
 
 # System Architecture
 
-```
-                    User
-                      │
-                      ▼
-               FastAPI Backend
-                      │
-                      ▼
-                DevMind Agent
-                      │
-      ┌───────────────┼────────────────┐
-      ▼               ▼                ▼
-   Memory        Project          Repository
-                    Tool             Tool
-      │               │                │
-      └───────────────┼────────────────┘
-                      ▼
-               Context Builder
-                      ▼
-                 AI Service
-                      ▼
-                  Gemini API
-                      ▼
-                  Final Response
+User
+   │
+   ▼
+FastAPI Backend
+   │
+   ▼
+DevMindAgent
+   │
+   ├──────── Planner
+   │
+   ├──────── Tool Executor
+   │              │
+   │              ▼
+   │        Tool Registry
+   │              │
+   │              ▼
+   │         Registered Tools
+   │
+   ├──────── Memory Manager
+   │
+   └──────── AI Service
+                  │
+                  ▼
+               Gemini
 ```
 
 The DevMind Agent acts as the central orchestrator of the entire system.
@@ -146,10 +147,13 @@ Responsible for:
 
 Responsibilities:
 
-- Understand user intent
-- Decide which tools are required
-- Build context
-- Coordinate the response pipeline
+- Manage conversation lifecycle
+- Coordinate all system components
+- Invoke the Planner
+- Execute tools through the Tool Executor
+- Retrieve conversation context
+- Generate AI responses
+- Return API responses
 
 The Agent is the brain of DevMind AI.
 
@@ -181,6 +185,21 @@ Future:
 
 ---
 
+## Planner
+
+Responsible for determining whether a tool should be executed before generating an AI response.
+
+Current implementation
+
+- Keyword-based planning
+
+Future
+
+- LLM-powered planning
+- Dynamic tool selection
+
+---
+
 ## Project Tool
 
 Reads local project files.
@@ -195,5 +214,21 @@ Understands Git repositories.
 
 Can answer repository-specific questions.
 
+---
 
+## Tool Framework
+
+Introduced in v0.3.0.
+
+Components:
+
+- BaseTool
+- ToolRegistry
+- ToolExecutor
+- ToolRequest
+- ToolResponse
+
+The framework enables DevMind AI to execute specialized tools without coupling the DevMindAgent to their implementations.
+
+---
 

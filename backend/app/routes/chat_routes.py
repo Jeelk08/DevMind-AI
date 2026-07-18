@@ -9,5 +9,9 @@ agent = DevMindAgent()
 
 @router.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
-    response = agent.chat(request.message)
-    return ChatResponse(response = response)
+    response = agent.chat(
+        request.session_id,
+        request.message
+    ) 
+
+    return response
