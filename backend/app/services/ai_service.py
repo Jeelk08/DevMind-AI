@@ -1,4 +1,4 @@
-import google.generativeai as genai
+from google import genai
 
 from app.core.config import GEMINI_API_KEY
 from app.core.personality import SYSTEM_PROMPT

@@ -117,9 +117,29 @@ User
 - Separated planning from execution.
 - Established foundation for future tools and intelligent planning.
 
+
+# v0.4.0 - Project Knowledge Engine
+
+## Added
+
+- RepositoryLoader for project file discovery
+- FileFilter for indexing supported source files
+- GenericChunker for splitting project files into chunks
+- GeminiEmbeddingService for semantic embeddings
+- InMemoryVectorStore for vector storage
+- ProjectIndexer for repository indexing
+- SimpleRetriever for semantic search
+- Project Knowledge domain models
+- Integration test for the complete RAG pipeline
+
+## Result
+
+DevMind can now index its own source code and retrieve semantically relevant code snippets from the repository.
+
+
 ## Next
 
-- v0.4 Intelligent Planner
+- v0.5 RAG implementation 
 
 
 Status
