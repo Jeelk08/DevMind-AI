@@ -166,6 +166,22 @@ Target Features
 
 ---
 
+## ✅ v0.5.0 — Repository Intelligence
+
+Completed
+
+### Features
+- AST Parsing
+- Symbol Extraction
+- Import Extraction
+- Repository Analysis
+- Relationship Graph
+- Python Repository Analyzer
+- Repository Metadata
+- Repository Analysis Models
+- Integration Testing
+
+---
 
 # Guiding Principle
 

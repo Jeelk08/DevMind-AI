@@ -3,10 +3,15 @@ from pathlib import Path
 class FileFilter:
 
     IGNORED_DIRS = {
-        ".gits",
+        ".git",
         ".idea",
         ".vscode",
         "__pycache__",
+        ".pytest_cache",
+        ".mypy_cache",
+        ".ruff_cache",
+        ".tox",
+        ".coverage",
         "venv",
         ".venv",
         "env",

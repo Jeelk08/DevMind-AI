@@ -2,6 +2,8 @@ from pathlib import Path
 import os
 from app.project_knowledge.exceptions import InvalidProjectPathException
 from app.project_knowledge.loader.file_filter import FileFilter
+from app.project_knowledge.models import ProjectFile
+
 
 class RepositoryLoader:
     # passed the file_filer from outside rather than doing 
@@ -13,8 +15,10 @@ class RepositoryLoader:
 
 
 
-    def load(self, project_path: Path) -> list[Path]:
-
+    def load(
+        self,
+        project_path: Path,
+        ) -> list[ProjectFile]:
         if not project_path.exists():
             raise InvalidProjectPathException(
                 f"Project Path '{project_path}' does not exists."
@@ -25,7 +29,7 @@ class RepositoryLoader:
                 f"'{project_path} is not a directory.'"
             )
 
-        files = []
+        project_files: list[ProjectFile] = []
 
         for root, dirs, filenames in os.walk(project_path): #os.walk is Python's built-in directory walker. Which returns in string
 
@@ -41,7 +45,17 @@ class RepositoryLoader:
                 if self.file_filter.should_ignore(file_path):
                     continue
 
-                files.append(file_path)
+                try:
+                    content = file_path.read_text(encoding="utf-8")
+                except UnicodeDecodeError:
+                    continue
 
-        return files
+                project_files.append(
+                    ProjectFile(
+                        path=file_path,
+                        content=content,
+                    )
+                )
+
+        return project_files
 

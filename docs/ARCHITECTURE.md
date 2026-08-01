@@ -13,9 +13,10 @@ This architecture makes the system modular, extensible, and easy to evolve as ne
 | Version | Milestone |
 |----------|-----------|
 | v0.1.0 | Agent Architecture |
-| v0.2.0 | Memory System |
-| **v0.3.0** | **Tool Calling Framework** |
-| v0.4.0 *(Planned)* | Intelligent Planner |
+| v0.2.0 | Memory & Session Management |
+| v0.3.0 | Tool Calling Framework |
+| v0.4.0 | Project Knowledge Engine (RAG) |
+| **v0.5.0** | **Repository Intelligence** |
 
 ---
 
@@ -30,6 +31,10 @@ The project is built around the following design principles:
 - Modular Service Architecture
 - Abstract Tool Interface
 - Centralized Orchestration
+- Repository Intelligence
+- Visitor Pattern
+- AST-based Static Analysis
+- Retrieval-Augmented Generation (RAG)
 
 ---
 

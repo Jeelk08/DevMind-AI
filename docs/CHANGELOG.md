@@ -137,9 +137,70 @@ User
 DevMind can now index its own source code and retrieve semantically relevant code snippets from the repository.
 
 
+# v0.5.0 - Repository Intelligence
+## Added
+
+### Repository Intelligence
+- Introduced the Repository Intelligence module for structural code analysis.
+- Added RepositoryAnalysis as the central analysis model.
+- Added RepositoryMetadata for repository-level information.
+- Added Symbol, ImportStatement, Relationship, and SymbolDependency models.
+
+### AST Processing
+- Implemented ASTExtractor to parse Python source files into ASTs.
+- Added ParsedFile model to store ProjectFile and parsed AST together.
+- Added graceful error handling for files that fail parsing.
+
+### Symbol Extraction
+- Implemented SymbolExtractor using the Visitor pattern.
+- Added SymbolVisitor to discover:
+  - Classes
+  - Functions
+  - Methods
+- Added unique symbol identification.
+- Added parent-child symbol tracking.
+
+### Import Analysis
+- Implemented ImportExtractor.
+- Added ImportVisitor to collect:
+  - import statements
+  - from ... import ... statements
+
+### Relationship Analysis
+- Implemented RelationshipGraph.
+- Added support for DEFINES relationships between parent and child symbols.
+
+### Analyzer
+- Added PythonRepositoryAnalyzer to orchestrate:
+  - AST extraction
+  - Symbol extraction
+  - Import extraction
+  - Relationship graph construction
+
+### Architecture Improvements
+- Refactored RepositoryLoader to return ProjectFile objects directly.
+- Simplified ProjectIndexer by removing ProjectFile creation responsibility.
+- Continued use of Constructor Injection across Repository Intelligence components.
+
+### Testing
+- Added end-to-end Repository Intelligence integration test.
+- Successfully analyzed DevMind AI's own repository.
+
+---
+
+## 📊 Repository Analysis Result
+
+Repository Intelligence successfully analyzed the DevMind AI source code.
+
+- Files Analysed: 60
+- Symbols Found: 138
+- Imports Found: 176
+- Relationships Found: 81
+
 ## Next
 
-- v0.5 RAG implementation 
+
+🚧 v0.6.0 — Repository Intelligence Expansion
 
 
 Status

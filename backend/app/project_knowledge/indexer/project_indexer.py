@@ -1,11 +1,10 @@
 from pathlib import Path
 
 from app.project_knowledge.loader.repository_loader import RepositoryLoader
-from app.project_knowledge.models import (IndexResult, ProjectFile)
+from app.project_knowledge.models import (IndexResult)
 from app.project_knowledge.parser.base_chunker import BaseChunker
 from app.project_knowledge.embeddings.base_embedding_service import BaseEmbeddingService
 from app.project_knowledge.vectorstore.base_vector_store import BaseVectorStore
-
 
 class ProjectIndexer:
 
@@ -15,29 +14,22 @@ class ProjectIndexer:
         chunker: BaseChunker,
         embedding_service: BaseEmbeddingService,
         vector_store: BaseVectorStore,
-    ):
+    ) -> None:
         self._loader = loader
         self._chunker = chunker
         self._embedding_service = embedding_service
         self._vector_store = vector_store
 
     def index(self, project_path: Path) -> IndexResult:
-        files = self._loader.load(project_path)
+        project_files = self._loader.load(project_path)
 
         files_indexed = 0
         chunks_created = 0
         skipped_files = 0
 
-        for path in files:
+        for project_file in project_files:
 
             try:
-                content = path.read_text(encoding="utf-8")
-
-                project_file = ProjectFile(
-                    path = path,
-                    content= content,
-                )
-
 
                 chunks = self._chunker.chunk(project_file)
 
@@ -62,7 +54,7 @@ class ProjectIndexer:
 
 
             except Exception as e: 
-                print(f"\nFailed: {path}")
+                print(f"\nFailed: {project_file.path}")
                 print(type(e).__name__)
                 print(e)
                 skipped_files += 1
