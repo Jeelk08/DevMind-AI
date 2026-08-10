@@ -10,6 +10,8 @@ from app.repository_intelligence.extractors.ast_extractor import ASTExtractor
 from app.repository_intelligence.extractors.import_extractor import ImportExtractor
 from app.repository_intelligence.extractors.symbol_extractor import SymbolExtractor
 from app.repository_intelligence.graph.relationship_graph import RelationshipGraph
+from app.repository_intelligence.models import RelationshipType
+from app.repository_intelligence.models import RelationshipType
 
 def test_repository_intelligence_pipeline():
 
@@ -37,7 +39,48 @@ def test_repository_intelligence_pipeline():
     assert analysis.metadata.files_analyzed > 0
     assert len(analysis.symbols) > 0
     assert len(analysis.imports) > 0
+    assert len(analysis.relationships) > 0
 
+    relationship_types = {
+        relationship.relationship_type
+        for relationship in analysis.relationships
+    }
+
+    assert RelationshipType.DEFINES in relationship_types
+    assert RelationshipType.INHERITS in relationship_types
+    assert RelationshipType.CALLS in relationship_types
+    assert RelationshipType.IMPORTS in relationship_types
+    graph = RelationshipGraph()
+
+    call_relationships = [
+    relationship
+    for relationship in analysis.relationships
+    if relationship.relationship_type == RelationshipType.CALLS
+]
+
+    assert len(call_relationships) > 0
+
+    call_relationship = call_relationships[0]
+
+    callees = graph.get_callees(
+        analysis,
+        call_relationship.source_symbol,
+    )
+
+    assert any(
+        symbol.id == call_relationship.target_symbol
+        for symbol in callees
+    )
+
+    callers = graph.get_callers(
+    analysis,
+    call_relationship.target_symbol,
+    )
+
+    assert any(
+        symbol.id == call_relationship.source_symbol
+        for symbol in callers
+    )
     print("\n========== Repository Intelligence ==========\n")
 
     print(f"Repository Root     : {analysis.metadata.root_path}")

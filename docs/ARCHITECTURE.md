@@ -16,7 +16,8 @@ This architecture makes the system modular, extensible, and easy to evolve as ne
 | v0.2.0 | Memory & Session Management |
 | v0.3.0 | Tool Calling Framework |
 | v0.4.0 | Project Knowledge Engine (RAG) |
-| **v0.5.0** | **Repository Intelligence** |
+| v0.5.0 | Repository Intelligence Foundation |
+| **v0.6.0** | **Repository Intelligence Expansion & Context Integration** |
 
 ---
 
@@ -393,39 +394,38 @@ ToolResponse
 
 ---
 
-# Future Roadmap
+# Repository Intelligence Architecture
 
-## v0.4.0
+v0.6.0 extends the Repository Intelligence system by combining structural
+analysis with semantic retrieval.
 
-- Intelligent Planner
-- LLM-based tool selection
-- Multiple tool execution
-- Tool confidence scoring
-
-## v0.5.0
-
-- RAG
-- Vector Database
-- Project Knowledge
-
-## v0.6.0
-
-- Personality System
-
-## v0.7.0
-
-- Repository Intelligence
-
-## v0.8.0
-
-- Plugin Architecture
-
-## v1.0.0
-
-- Stable Release
-- Complete AI Developer Assistant
+```
+                    Repository Query
+                          │
+                          ▼
+                   Planner
+                          │
+                          ▼
+             RepositoryContextTool
+                    │           │
+                    ▼           ▼
+             SimpleRetriever   RepositoryAnalyzer
+                    │           │
+                    ▼           ▼
+             Relevant Chunks   RelationshipGraph
+                    │           │
+                    └─────┬─────┘
+                          ▼
+                  Repository Context
+                          │
+                          ▼
+                      AIService
+                          │
+                          ▼
+                        Gemini
 
 ---
+
 
 # Summary
 

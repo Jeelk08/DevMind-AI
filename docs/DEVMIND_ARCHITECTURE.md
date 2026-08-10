@@ -1,6 +1,6 @@
 # DevMind AI Architecture
 
-> Version: v0.3.0
+> Version: v0.7.0
 > Status: Active Development
 > Author: Jeel Koradiya
 

@@ -60,6 +60,8 @@ class ImportStatement:
     imported_module: str
     source_symbol: str | None = None
     imported_name: str | None = None
+    source_file: Path | None = None
+    
 
 @dataclass
 class SymbolDependency:

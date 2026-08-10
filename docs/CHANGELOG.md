@@ -197,10 +197,68 @@ Repository Intelligence successfully analyzed the DevMind AI source code.
 - Imports Found: 176
 - Relationships Found: 81
 
+
+
+# v0.6.0 - Repository Intelligence Expansion
+
+## Added
+
+### Relationship Graph
+- Expanded `RelationshipGraph` to support:
+  - DEFINES relationships
+  - INHERITS relationships
+  - CALLS relationships
+  - IMPORTS relationships
+- Added modular relationship graph builders.
+- Added symbol resolvers for relationship construction.
+- Added `GraphQuery` for querying repository relationships.
+
+### Repository Context
+- Added `RepositoryContextTool`.
+- Integrated semantic RAG retrieval with Repository Intelligence.
+- Added repository-aware context generation combining:
+  - Relevant code chunks
+  - Repository symbols
+  - Structural relationships
+
+### Agent Integration
+- Integrated `RepositoryContextTool` into `DevMindAgent`.
+- Extended `Planner` to recognize repository-related requests.
+- Repository-aware queries can now be handled through the `/chat` API.
+
+### API
+- Updated `ChatRequest` to support optional session creation.
+- Updated `ChatResponse` to return the generated session ID.
+
+## Improved
+
+- Refactored `RelationshipGraph` into smaller components following the Single Responsibility Principle.
+- Updated Gemini integration to use the current `google-genai` client API.
+
+## Tested
+
+- Repository Intelligence end-to-end pipeline.
+- Relationship graph generation.
+- Repository context integration.
+- Full pytest suite.
+- End-to-end repository-aware interaction through the FastAPI `/chat` endpoint.
+
+## Known Limitations
+
+- Repository Context currently relies on semantic top-k retrieval and may not always retrieve an exact requested file for highly specific queries.
+- Repository analysis is currently performed sequentially during Repository Context execution.
+
+## Result
+
+DevMind can now combine semantic code retrieval with structural repository intelligence to provide repository-aware responses.
+
+
+
+
 ## Next
 
 
-🚧 v0.6.0 — Repository Intelligence Expansion
+🚧 v0.7.0 — Repository Intelligence Expansion
 
 
 Status

@@ -58,6 +58,9 @@ class PythonRepositoryAnalyzer(BaseRepositoryAnalyzer):
             analysis,
         )
 
-        self.relationship_graph.build(analysis)
+        self.relationship_graph.build(
+            analysis,
+            parsed_files,
+        )
 
         return analysis

@@ -44,7 +44,7 @@ Status: Completed
 
 ## 🚧 Version 0.2.0 — Conversation Memory
 
-Status: Planned
+Status: completed
 
 ### Goals
 
@@ -57,7 +57,7 @@ Status: Planned
 
 ## 🚧 Version 0.3.0 — Project Context
 
-Status: Planned
+Status: completed
 
 ### Goals
 
@@ -68,59 +68,74 @@ Status: Planned
 
 ---
 
-## 🚧 Version 0.4.0 — Retrieval Augmented Generation (RAG)
+## ✅ Version 0.4.0 — Project Knowledge Engine
 
-Status: Planned
+Status: Completed
 
-### Goals
+### Features
 
-- Document Loader
-- Chunking
-- Embeddings
-- Vector Database
-- Semantic Search
-- Context Retrieval
-
----
-
-## 🚧 Version 0.5.0 — Repository Intelligence
-
-Status: Planned
-
-### Goals
-
-- Repository Scanner
-- File Understanding
-- Dependency Analysis
-- Architecture Understanding
-- Repository Question Answering
+- Repository Loader
+- File Filtering
+- Code Chunking
+- Gemini Embeddings
+- Vector Storage
+- Project Indexing
+- Semantic Retrieval
+- RAG Pipeline
 
 ---
 
-## 🚧 Version 0.6.0 — Developer Tools
+## ✅ Version 0.5.0 — Repository Intelligence Foundation
 
-Status: Planned
+Status: Completed
 
-### Goals
+### Features
 
-- Tool Calling
-- Code Search
-- File Operations
-- Terminal Commands
-- Documentation Generator
+- AST Parsing
+- Symbol Extraction
+- Import Extraction
+- Repository Analysis
+- Repository Metadata
+- Relationship Graph Foundation
+- Python Repository Analyzer
+- Integration Testing
 
 ---
 
-## 🚧 Version 0.7.0 — Planning Engine
+## ✅ Version 0.6.0 — Repository Intelligence Expansion
+
+Status: Completed
+
+### Features
+
+- Expanded Relationship Graph
+- DEFINES relationships
+- INHERITS relationships
+- CALLS relationships
+- IMPORTS relationships
+- Relationship Graph Builders
+- Symbol Resolvers
+- Graph Query API
+- Repository Context Tool
+- RAG + Repository Intelligence integration
+- Repository-aware Agent integration
+- Repository-aware Chat API
+
+---
+
+## 🚧 Version 0.7.0 — Intelligent Developer Tools
 
 Status: Planned
 
 ### Goals
 
-- Task Planning
-- Multi-Step Reasoning
-- Software Planning
-- Workflow Management
+- Improved repository retrieval
+- Path-aware retrieval
+- Symbol-aware retrieval
+- Code search
+- File operations
+- Terminal commands
+- Documentation generation
 
 ---
 

@@ -4,7 +4,7 @@ from app.agents.planner import Planner
 from app.agents.tool_executor import ToolExecutor
 from app.tools.memory_tool import MemoryTool
 from app.tools.tool_registry import ToolRegistry
-
+from app.tools.repository_context_tool import RepositoryContextTool
 
 class DevMindAgent: 
     
@@ -12,13 +12,14 @@ class DevMindAgent:
         self.ai_service = AIService()
         self.memory = MemoryManager()
         self.tool_registry = ToolRegistry()
+        self.repository_context_tool = RepositoryContextTool()
 
         self.memory_tool = MemoryTool(self.memory)
         self.tool_registry.register(self.memory_tool)
-        
+
         self.planner = Planner()
         self.tool_executor = ToolExecutor(self.tool_registry)
-
+        self.tool_registry.register(self.repository_context_tool)
 
     def chat(self, session_id: str | None, message: str):
 

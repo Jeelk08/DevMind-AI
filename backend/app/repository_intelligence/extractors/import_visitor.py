@@ -29,6 +29,7 @@ class ImportVisitor(ast.NodeVisitor):
                 imported_module=alias.name,
                 source_symbol= None,
                 imported_name=None,
+                source_file=self.project_file.path,
             )
 
             self.analysis.imports.append(import_statement)
@@ -44,6 +45,7 @@ class ImportVisitor(ast.NodeVisitor):
                 source_symbol=None,
                 imported_module=node.module or "",
                 imported_name=alias.name,
+                source_file=self.project_file.path,
             )
             self.analysis.imports.append(import_statement)
         self.generic_visit(node)
