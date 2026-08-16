@@ -22,37 +22,38 @@ class ProjectIndexer:
 
     def index(self, project_path: Path) -> IndexResult:
         project_files = self._loader.load(project_path)
+        return self.index_files(project_files)
 
+        
+        
+    def index_files(self, project_files) -> IndexResult:
         files_indexed = 0
         chunks_created = 0
         skipped_files = 0
-
         for project_file in project_files:
-
             try:
-
+        
                 chunks = self._chunker.chunk(project_file)
 
-                # if not project_file.content.strip():
+                        # if not project_file.content.strip():
                 if not chunks:
                     skipped_files += 1
                     continue
-
-
+        
+        
                 embedded_chunks = self._embedding_service.embed_chunks(chunks)
-
                 if not embedded_chunks:
                     skipped_files += 1
                     continue
-
-                
+        
+                        
                 self._vector_store.store(embedded_chunks) 
 
                 files_indexed += 1
                 chunks_created += len(chunks)
-
-
-
+        
+        
+        
             except Exception as e: 
                 print(f"\nFailed: {project_file.path}")
                 print(type(e).__name__)
@@ -64,4 +65,3 @@ class ProjectIndexer:
             chunks_created= chunks_created,
             skipped_files= skipped_files,
         )
-    

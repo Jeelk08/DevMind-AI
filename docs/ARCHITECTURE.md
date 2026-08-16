@@ -17,7 +17,9 @@ This architecture makes the system modular, extensible, and easy to evolve as ne
 | v0.3.0 | Tool Calling Framework |
 | v0.4.0 | Project Knowledge Engine (RAG) |
 | v0.5.0 | Repository Intelligence Foundation |
-| **v0.6.0** | **Repository Intelligence Expansion & Context Integration** |
+| v0.6.0 | Repository Intelligence Expansion & Context Integration | 
+| v0.7.0 | Intelligent Repository Retrieval | 
+
 
 ---
 
@@ -424,6 +426,72 @@ analysis with semantic retrieval.
                           ▼
                         Gemini
 
+---
+
+## Intelligent Repository Retrieval
+
+DevMind AI uses an IntelligentRetriever to combine multiple retrieval strategies when searching a repository.
+
+### Retrieval Strategies
+
+The IntelligentRetriever combines three sources:
+
+1. **Semantic Retrieval**
+   - Uses embeddings and the vector store.
+   - Finds chunks based on semantic similarity to the user's query.
+
+2. **Symbol Retrieval**
+   - Uses repository analysis to identify relevant symbols such as classes, functions, and other definitions.
+   - Helps answer implementation-oriented queries such as:
+     - "Where is ToolRegistry implemented?"
+     - "Where is the Planner defined?"
+
+3. **Path Retrieval**
+   - Searches repository file paths for query-related matches.
+   - Provides an additional structural signal when the query refers to files or locations.
+
+### Retrieval Candidate
+
+Each retrieval result is represented internally as a `RetrievalCandidate`.
+
+A candidate contains:
+
+- `chunk`
+- `semantic_score`
+- `symbol_match`
+- `path_match`
+
+Candidates are identified at chunk level using:
+
+```text
+(path, start_offset, end_offset) 
+
+
+User Query
+    |
+    +-------------------+
+    |                   |
+    v                   v
+Symbol Retrieval    Path Retrieval
+    |                   |
+    v                   v
+Symbol/Path Signals
+    |
+    +------------------------+
+                             |
+                             v
+                    Semantic Retrieval
+                             |
+                             v
+                    Retrieval Candidates
+                             |
+                             v
+                      Score + Ranking
+                             |
+                             v
+                       Top-K Chunks
+
+                       
 ---
 
 

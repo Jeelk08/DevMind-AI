@@ -253,7 +253,32 @@ Repository Intelligence successfully analyzed the DevMind AI source code.
 DevMind can now combine semantic code retrieval with structural repository intelligence to provide repository-aware responses.
 
 
+## [0.7.0] - Intelligent Repository Retrieval
 
+### Added
+- Implemented intelligent repository retrieval combining:
+  - Semantic retrieval
+  - Symbol-based retrieval
+  - Path-based retrieval
+- Added `RetrievalCandidate` model for unified retrieval candidates.
+- Added chunk-level candidate identification using file path and chunk offsets.
+- Added relevance scoring with semantic, symbol, and path signals.
+- Added ranking of retrieval candidates based on final relevance score.
+
+### Improved
+- Improved IntelligentRetriever candidate handling.
+- Preserved multiple chunks from the same file when they represent different regions.
+- Improved prioritization of symbol and path matches over purely semantic matches.
+- Fixed handling of `Chunk` and `SearchResult` objects during semantic retrieval.
+
+### Testing
+- Added and updated IntelligentRetriever tests.
+- Added retrieval ranking tests covering:
+  - Semantic score ranking
+  - Symbol match prioritization
+  - Path match prioritization
+  - Combined retrieval signals
+- Current test status: 16 passed, 1 failure caused by Gemini embedding API quota exhaustion.
 
 ## Next
 

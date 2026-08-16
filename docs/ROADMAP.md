@@ -123,19 +123,24 @@ Status: Completed
 
 ---
 
-## 🚧 Version 0.7.0 — Intelligent Developer Tools
 
-Status: Planned
+## v0.7.0 — Intelligent Repository Retrieval
 
-### Goals
+### Status: Completed
 
-- Improved repository retrieval
-- Path-aware retrieval
-- Symbol-aware retrieval
-- Code search
-- File operations
-- Terminal commands
-- Documentation generation
+- [x] Semantic retrieval
+- [x] Symbol-based retrieval
+- [x] Path-based retrieval
+- [x] Unified retrieval candidates
+- [x] Chunk-level candidate identification
+- [x] Multi-signal relevance scoring
+- [x] Intelligent result ranking
+- [x] Retrieval ranking tests
+- [x] IntelligentRetriever tests
+
+### Notes
+
+The retrieval system now combines semantic similarity with repository structure to improve the relevance of repository context returned to the AI.
 
 ---
 
@@ -197,6 +202,8 @@ Completed
 - Integration Testing
 
 ---
+
+
 
 # Guiding Principle
 

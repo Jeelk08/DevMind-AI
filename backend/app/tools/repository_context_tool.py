@@ -1,5 +1,4 @@
 from pathlib import Path
-
 from app.tools.base_tool import BaseTool
 from app.tools.tool_request import ToolRequest
 from app.tools.tool_response import ToolResponse
@@ -11,6 +10,10 @@ from app.project_knowledge.embeddings.gemini_embedding_service import (
     GeminiEmbeddingService,
 )
 from app.project_knowledge.retriever.simple_retriever import SimpleRetriever
+from app.project_knowledge.retriever.symbol_retriever import SymbolRetriever
+from app.project_knowledge.retriever.path_retriever import PathRetriever
+from app.project_knowledge.retriever.intelligent_retriever import IntelligentRetriever
+
 from app.project_knowledge.vectorstore.in_memory_vector_store import (
     InMemoryVectorStore,
 )
@@ -31,6 +34,7 @@ from app.repository_intelligence.extractors.import_extractor import (
 from app.repository_intelligence.graph.relationship_graph import (
     RelationshipGraph,
 )
+from app.project_knowledge.indexer.project_indexer import ProjectIndexer
 
 
 class RepositoryContextTool(BaseTool):
@@ -49,12 +53,23 @@ class RepositoryContextTool(BaseTool):
             client=client,
         )
 
-        self._retriever = SimpleRetriever(
-            embedding_service=self._embedding_service,
-            vector_store=self._vector_store,
-        )
+        self._project_files = []
+        self._analysis = None
 
         self._index_repository()
+
+        self._retriever = IntelligentRetriever(
+            semantic_retriever=SimpleRetriever(
+                embedding_service=self._embedding_service,
+                vector_store=self._vector_store,
+            ),
+            symbol_retriever=SymbolRetriever(
+                analysis=self._analysis,
+            ),
+            path_retriever=PathRetriever(
+                files=self._project_files,
+            ),
+        )
 
     @property
     def id(self) -> str:
@@ -77,31 +92,24 @@ class RepositoryContextTool(BaseTool):
             file_filter=FileFilter(),
         )
 
-        chunker = GenericChunker()
-
         project_files = loader.load(
             self._repository_root,
         )
 
-        for project_file in project_files:
+        self._project_files = project_files
 
-            chunks = chunker.chunk(
-                project_file,
-            )
+        self._analysis = self._analyze_repository(project_files)
 
-            if not chunks:
-                continue
+        indexer = ProjectIndexer(
+            loader=loader,
+            chunker=GenericChunker(),
+            embedding_service=self._embedding_service,
+            vector_store=self._vector_store,
+        )
 
-            embedded_chunks = (
-                self._embedding_service.embed_chunks(
-                    chunks,
-                )
-            )
-
-            if embedded_chunks:
-                self._vector_store.store(
-                    embedded_chunks,
-                )
+        indexer.index_files(
+            project_files,
+        )
 
     def execute(
         self,
@@ -115,7 +123,7 @@ class RepositoryContextTool(BaseTool):
                 top_k=5,
             )
 
-            analysis = self._analyze_repository()
+            analysis = self._analysis
 
             context = self._build_context(
                 chunks,
@@ -137,16 +145,10 @@ class RepositoryContextTool(BaseTool):
                 error=str(e),
             )
 
-    def _analyze_repository(self):
+    def _analyze_repository(self, project_files):
 
-        loader = RepositoryLoader(
-            file_filter=FileFilter(),
-        )
 
-        project_files = loader.load(
-            self._repository_root,
-        )
-
+        
         analyzer = PythonRepositoryAnalyzer(
             ast_extractor=ASTExtractor(),
             symbol_extractor=SymbolExtractor(),
