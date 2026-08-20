@@ -89,10 +89,10 @@ def main():
     # ---------- Queries ----------
 
     questions = [
-        "What is MemoryManager?",
+        # "What is MemoryManager?",
         "Explain DevMindAgent.",
-        "How does ToolRegistry work?",
-        "Where is GeminiClient implemented?",
+        # "How does ToolRegistry work?",
+        # "Where is GeminiClient implemented?",
     ]
 
     for question in questions:
@@ -110,12 +110,17 @@ def main():
             print("No relevant chunks found.")
             continue
 
-        for i, chunk in enumerate(chunks, start=1):
+        for i, result in enumerate(chunks, start=1):
 
-            print(f"\nChunk {i}")
+            chunk = result.chunk
+
+            print(f"\nResult {i}")
             print("-" * 70)
 
-            print("Path:")
+            print("Score:")
+            print(result.score)
+
+            print("\nPath:")
             print(chunk.path)
 
             print("\nOffsets:")

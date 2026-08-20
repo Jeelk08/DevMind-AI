@@ -34,7 +34,9 @@ from app.repository_intelligence.extractors.import_extractor import (
 from app.repository_intelligence.graph.relationship_graph import (
     RelationshipGraph,
 )
-from app.project_knowledge.indexer.project_indexer import ProjectIndexer
+from app.project_knowledge.indexer.incremental_index_manager import (
+    IncrementalIndexManager,
+)
 
 
 class RepositoryContextTool(BaseTool):
@@ -98,18 +100,28 @@ class RepositoryContextTool(BaseTool):
 
         self._project_files = project_files
 
-        self._analysis = self._analyze_repository(project_files)
+        self._analysis = self._analyze_repository(
+            project_files
+        )
 
-        indexer = ProjectIndexer(
-            loader=loader,
+        index_manager = IncrementalIndexManager(
+            repository_root=self._repository_root,
             chunker=GenericChunker(),
             embedding_service=self._embedding_service,
             vector_store=self._vector_store,
         )
 
-        indexer.index_files(
-            project_files,
+        stats = index_manager.update(
+            project_files
         )
+
+        print("\n========== REPOSITORY INDEX ==========")
+        print(f"New files indexed : {stats['added']}")
+        print(f"Modified files    : {stats['modified']}")
+        print(f"Reused files      : {stats['reused']}")
+        print(f"Deleted files     : {stats['deleted']}")
+        print(f"Failed files      : {stats['failed']}")
+        print("======================================\n")
 
     def execute(
         self,
@@ -134,7 +146,10 @@ class RepositoryContextTool(BaseTool):
                 result=[
                     {
                         "role": "user",
-                        "content": context,
+                        "content": (
+                            f"User Question:\n{request.input}\n\n"
+                            f"{context}"
+                        ),
                     }
                 ]
             )

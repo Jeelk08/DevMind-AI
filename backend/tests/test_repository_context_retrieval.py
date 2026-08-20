@@ -1,8 +1,6 @@
 from pathlib import Path
-
 from app.tools.repository_context_tool import RepositoryContextTool
 from app.tools.tool_request import ToolRequest
-
 
 # def test_repository_context_finds_tool_registry():
 #     tool = RepositoryContextTool()
@@ -25,21 +23,21 @@ from app.tools.tool_request import ToolRequest
 #     context = response.result[0]["content"]
 
 #     assert "app/tools/tool_registry.py" in context
-
-def test_semantic_retrieval_results():
+def test_intelligent_retrieval_results():
     tool = RepositoryContextTool()
 
-    results = tool._retriever.semantic_retriever.retrieve(
-        query="Where is ToolRegistry implemented?",
-        top_k=10,
+    results = tool._retriever.retrieve(
+        query="Explain DevMindAgent.",
+        top_k=5,
     )
 
-    print("\n========== SEMANTIC RESULTS ==========")
+    print("\n========== INTELLIGENT RESULTS ==========")
 
-    for result in results:
+    for i, result in enumerate(results, start=1):
         print(
-            f"score={result.score:.4f} "
-            f"path={result.chunk.path}"
+            f"\nResult {i}"
         )
+        print(f"Path: {result.path}")
+        print(f"Content:\n{result.content}")
 
-    print("======================================")
+    print("\n==========================================")

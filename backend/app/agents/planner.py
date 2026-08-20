@@ -35,28 +35,57 @@ class Planner:
 
         repository_keywords = [
             "code",
+            "codebase",
             "repository",
             "repo",
+            "project",
             "function",
             "class",
+            "method",
+            "module",
             "file",
+            "component",
+            "service",
+            "agent",
+            "tool",
             "architecture",
-            "dependency",
+            "implementation",
+            "implemented",
             "import",
             "call",
+            "pipeline",
+            "retriever",
+            "indexer",
+            "embedding",
+            "vector",
+            "memorymanager",
+            "toolregistry",
+            "devmindagent",
         ]
 
-        if any(
-            keyword in message
-            for keyword in repository_keywords
-        ):
+        project_context_phrases = [
+            "in this project",
+            "in this codebase",
+            "in the project",
+            "in the codebase",
+            "in our project",
+            "in our code",
+            "in this repository",
+            "in the repository",
+            "how does",
+            "where is",
+            "how is",
+            "explain how",
+        ]
 
+
+        if (
+            any(keyword in message for keyword in repository_keywords)
+            or any(phrase in message for phrase in project_context_phrases)
+        ):
             return ToolRequest(
                 tool_id="repository_context",
                 session_id=session_id,
                 input=message,
                 context={}
             )
-
-        return None
-
