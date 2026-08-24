@@ -1,0 +1,146 @@
+/* =========================================================
+   DevMind — Code Block
+   ========================================================= */
+
+.code-block {
+  margin: var(--dm-space-4) 0;
+
+  overflow: hidden;
+
+  border:
+    1px solid
+    var(--dm-border);
+
+  border-radius: var(--dm-radius-lg);
+
+  background: var(--dm-surface);
+
+  box-shadow: var(--dm-shadow-sm);
+}
+
+
+/* =========================================================
+   Header
+   ========================================================= */
+
+.code-block__header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  min-height: 36px;
+
+  padding:
+    0
+    var(--dm-space-3);
+
+  border-bottom:
+    1px solid
+    var(--dm-border);
+
+  background: var(--dm-surface-hover);
+}
+
+
+/* =========================================================
+   Language
+   ========================================================= */
+
+.code-block__language {
+  color: var(--dm-text-secondary);
+
+  font-family: var(--dm-font-mono);
+  font-size: var(--dm-text-xs);
+
+  text-transform: lowercase;
+}
+
+
+/* =========================================================
+   Copy button
+   ========================================================= */
+
+.code-block__copy {
+  padding:
+    var(--dm-space-1)
+    var(--dm-space-2);
+
+  border:
+    1px solid
+    var(--dm-border);
+
+  border-radius: var(--dm-radius-sm);
+
+  color: var(--dm-text-secondary);
+  background: transparent;
+
+  font-size: var(--dm-text-xs);
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition:
+    color var(--dm-duration-fast) var(--dm-ease-standard),
+    background-color var(--dm-duration-fast) var(--dm-ease-standard),
+    border-color var(--dm-duration-fast) var(--dm-ease-standard);
+}
+
+.code-block__copy:hover {
+  color: var(--dm-text-primary);
+
+  background: var(--dm-surface);
+
+  border-color: var(--dm-border-focus);
+}
+
+
+/* =========================================================
+   Syntax highlighter
+   ========================================================= */
+
+.code-block pre {
+  margin: 0 !important;
+
+  padding: var(--dm-space-4) !important;
+
+  overflow-x: auto !important;
+
+  background: transparent !important;
+
+  font-size: var(--dm-text-sm) !important;
+
+  line-height: var(--dm-line-normal) !important;
+}
+
+.code-block code {
+  font-family: var(--dm-font-mono) !important;
+}
+
+
+/* =========================================================
+   Scrollbar
+   ========================================================= */
+
+.code-block pre::-webkit-scrollbar {
+  height: 6px;
+}
+
+.code-block pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 760px) {
+  .code-block pre {
+    padding: var(--dm-space-3) !important;
+  }
+
+  .code-block__header {
+    min-height: 34px;
+  }
+}

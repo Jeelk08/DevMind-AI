@@ -4,7 +4,10 @@ from app.agents.planner import Planner
 from app.agents.tool_executor import ToolExecutor
 from app.tools.memory_tool import MemoryTool
 from app.tools.tool_registry import ToolRegistry
-from app.tools.repository_context_tool import RepositoryContextTool
+from app.core.dependencies import (
+    get_repository_context_tool,
+)
+
 
 class DevMindAgent: 
     
@@ -12,16 +15,15 @@ class DevMindAgent:
         self.ai_service = AIService()
         self.memory = MemoryManager()
         self.tool_registry = ToolRegistry()
-        self.repository_context_tool = RepositoryContextTool()
 
         self.memory_tool = MemoryTool(self.memory)
         self.tool_registry.register(self.memory_tool)
-
+        
         self.planner = Planner()
         self.tool_executor = ToolExecutor(self.tool_registry)
-        self.tool_registry.register(self.repository_context_tool)
+        
 
-    def chat(self, session_id: str | None, message: str):
+    def chat(self, session_id: str | None, message: str, project_id: str,):
 
         if session_id is None:#creates a new session_id if doesn't exist
             session_id = self.memory.create_session()
@@ -38,21 +40,49 @@ class DevMindAgent:
             session_id
         )
 
-        
+# ==============================
 
         if request is not None:
-            tool_response = self.tool_executor.execute(request)
+
+            if request.tool_id == "repository_context":
+
+                repository_context_tool = (
+                    get_repository_context_tool(
+                        project_id
+                    )
+                )
+
+                tool_response = (
+                    self.tool_executor.execute(
+                        request,
+                        tool=repository_context_tool,
+                    )
+                )
+
+            else:
+
+                tool_response = (
+                    self.tool_executor.execute(
+                        request
+                    )
+                )
 
             if tool_response.error:
-                history = self.memory.get_history(session_id)
+                history = self.memory.get_history(
+                    session_id
+                )
             else:
                 history = tool_response.result
+
         else:
-            history = self.memory.get_history(session_id)
+
+            history = self.memory.get_history(
+                session_id
+            )
 
 
 
-
+# ===============================
         response = self.ai_service.get_response(history)
         
         self.memory.save_message( #save the AI response

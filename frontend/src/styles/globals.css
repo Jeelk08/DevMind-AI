@@ -1,0 +1,195 @@
+/* =========================================================
+   DevMind — Global Styles
+   ========================================================= */
+
+/* ---------- Box sizing ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+
+/* ---------- Document ---------- */
+
+html {
+  width: 100%;
+  height: 100%;
+  font-family: var(--dm-font-ui);
+  font-size: 16px;
+  line-height: var(--dm-line-normal);
+  color: var(--dm-text-primary);
+  background: var(--dm-bg-primary);
+  color-scheme: dark;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  width: 100%;
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--dm-bg-primary);
+  color: var(--dm-text-primary);
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+
+/* ---------- Typography ---------- */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: var(--dm-line-tight);
+  font-weight: 600;
+}
+
+p {
+  line-height: var(--dm-line-relaxed);
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--dm-font-code);
+}
+
+
+/* ---------- Links ---------- */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+/* ---------- Buttons & form controls ---------- */
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  color: inherit;
+  background: none;
+}
+
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+textarea:disabled,
+select:disabled {
+  cursor: not-allowed;
+}
+
+
+/* ---------- Images ---------- */
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+
+/* ---------- Selection ---------- */
+
+::selection {
+  color: var(--dm-text-primary);
+  background: var(--dm-accent);
+}
+
+
+/* ---------- Scrollbars ---------- */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--dm-border) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: var(--dm-radius-full);
+  background: var(--dm-border);
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--dm-border-focus);
+  background-clip: padding-box;
+}
+
+
+/* ---------- Focus ---------- */
+
+:focus-visible {
+  outline: 2px solid var(--dm-accent);
+  outline-offset: 2px;
+}
+
+
+/* ---------- Utility ---------- */
+
+.dm-code {
+  font-family: var(--dm-font-code);
+}
+
+.dm-muted {
+  color: var(--dm-text-muted);
+}
+
+.dm-secondary {
+  color: var(--dm-text-secondary);
+}
+
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

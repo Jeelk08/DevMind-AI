@@ -1,0 +1,147 @@
+/* =========================================================
+   DevMind — Context Source
+   ========================================================= */
+
+.context-source {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--dm-space-3);
+
+  width: 100%;
+  min-width: 0;
+
+  padding: var(--dm-space-3);
+
+  border:
+    1px solid
+    var(--dm-border);
+
+  border-radius: var(--dm-radius-lg);
+
+  background: var(--dm-surface);
+
+  transition:
+    background-color var(--dm-duration-fast) var(--dm-ease-standard),
+    border-color var(--dm-duration-fast) var(--dm-ease-standard);
+}
+
+.context-source:hover {
+  background: var(--dm-surface-hover);
+  border-color: var(--dm-border-focus);
+}
+
+
+/* =========================================================
+   Icon
+   ========================================================= */
+
+.context-source__icon {
+  display: grid;
+  place-items: center;
+
+  flex-shrink: 0;
+
+  width: 30px;
+  height: 30px;
+
+  border-radius: var(--dm-radius-md);
+
+  background: var(--dm-accent-muted);
+
+  font-size: var(--dm-text-xs);
+}
+
+
+/* =========================================================
+   Information
+   ========================================================= */
+
+.context-source__info {
+  display: flex;
+  flex-direction: column;
+
+  flex: 1;
+  min-width: 0;
+}
+
+.context-source__name {
+  overflow: hidden;
+
+  color: var(--dm-text-primary);
+
+  font-size: var(--dm-text-sm);
+  font-weight: 500;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.context-source__path {
+  margin-top: 2px;
+
+  overflow: hidden;
+
+  color: var(--dm-text-muted);
+
+  font-family: var(--dm-font-mono);
+  font-size: 0.625rem;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.context-source__relevance {
+  margin-top: var(--dm-space-1);
+
+  color: var(--dm-accent);
+
+  font-size: 0.625rem;
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   Action
+   ========================================================= */
+
+.context-source__action {
+  display: grid;
+  place-items: center;
+
+  flex-shrink: 0;
+
+  width: 24px;
+  height: 24px;
+
+  border-radius: var(--dm-radius-sm);
+
+  color: var(--dm-text-muted);
+
+  font-size: var(--dm-text-sm);
+
+  transition:
+    color var(--dm-duration-fast) var(--dm-ease-standard),
+    background-color var(--dm-duration-fast) var(--dm-ease-standard);
+}
+
+.context-source__action:hover {
+  color: var(--dm-text-primary);
+  background: var(--dm-surface-active);
+}
+
+/* =========================================================
+   Interaction States
+   ========================================================= */
+
+.context-source {
+  cursor: pointer;
+}
+
+.context-source:focus-visible {
+  outline: 2px solid var(--dm-accent);
+  outline-offset: 2px;
+}
+
+.context-source:active {
+  transform: translateY(1px);
+}

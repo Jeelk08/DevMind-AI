@@ -1,9 +1,9 @@
+from dataclasses import dataclass
+
 from app.project_knowledge.models import Chunk
 from app.project_knowledge.retriever.path_retriever import PathRetriever
 from app.project_knowledge.retriever.simple_retriever import SimpleRetriever
 from app.project_knowledge.retriever.symbol_retriever import SymbolRetriever
-from dataclasses import dataclass
-
 
 
 @dataclass
@@ -24,13 +24,27 @@ class RetrievalCandidate:
             score += 0.3
 
         return score
+
+    @property
+    def relevance_score(self) -> float:
+        """
+        Score exposed to the API/UI.
+
+        The internal final_score may exceed 1.0 because
+        symbol and path bonuses are added to the semantic score.
+        Keep the public relevance score within 0.0 - 1.0.
+        """
+        return min(max(self.final_score, 0.0), 1.0)
+
     @property
     def chunk_key(self) -> tuple[str, int, int]:
         return (
             str(self.chunk.path),
             self.chunk.start_offset,
             self.chunk.end_offset,
-    )
+        )
+
+
 class IntelligentRetriever:
 
     def __init__(
@@ -43,29 +57,41 @@ class IntelligentRetriever:
         self.symbol_retriever = symbol_retriever
         self.path_retriever = path_retriever
 
-    def _chunk_key(self, chunk: Chunk) -> tuple[str, int, int]:
+    def _chunk_key(
+        self,
+        chunk: Chunk,
+    ) -> tuple[str, int, int]:
         return (
             str(chunk.path),
             chunk.start_offset,
             chunk.end_offset,
         )
 
-    def retrieve(
+    def _retrieve_candidates(
         self,
         query: str,
-        top_k: int = 5,
-    ) -> list[Chunk]:
+        top_k: int,
+    ) -> list[RetrievalCandidate]:
 
         if top_k <= 0:
-            raise ValueError("top_k must be positive.")
+            raise ValueError(
+                "top_k must be positive."
+            )
 
-        candidates: dict[tuple[str, int, int], RetrievalCandidate] = {}
+        candidates: dict[
+            tuple[str, int, int],
+            RetrievalCandidate,
+        ] = {}
+
         symbol_paths: set[str] = set()
         path_matches: set[str] = set()
 
         # 1. Symbol matches
-        for symbol in self.symbol_retriever.retrieve(query):
+        for symbol in self.symbol_retriever.retrieve(
+            query
+        ):
             path = str(symbol.file_path)
+
             chunk = Chunk(
                 content=symbol.docstring or symbol.name,
                 path=symbol.file_path,
@@ -74,9 +100,11 @@ class IntelligentRetriever:
             )
 
             key = self._chunk_key(chunk)
+
             if key in candidates:
                 candidates[key].symbol_match = True
                 continue
+
             candidates[key] = RetrievalCandidate(
                 chunk=chunk,
                 symbol_match=True,
@@ -84,17 +112,19 @@ class IntelligentRetriever:
 
             symbol_paths.add(path)
 
-
         # 2. Path matches
-        for project_file in self.path_retriever.retrieve(query):
-
+        for project_file in self.path_retriever.retrieve(
+            query
+        ):
             path = str(project_file.path)
 
             chunk = Chunk(
                 content=project_file.content,
                 path=project_file.path,
                 start_offset=0,
-                end_offset=len(project_file.content),
+                end_offset=len(
+                    project_file.content
+                ),
             )
 
             key = self._chunk_key(chunk)
@@ -109,19 +139,27 @@ class IntelligentRetriever:
             )
 
             path_matches.add(path)
-         
 
         # 3. Semantic retrieval
-        semantic_top_k = max(top_k * 3, 10)
+        semantic_top_k = max(
+            top_k * 3,
+            10,
+        )
 
-        semantic_results = self.semantic_retriever.retrieve(
-            query=query,
-            top_k=semantic_top_k,
+        semantic_results = (
+            self.semantic_retriever.retrieve(
+                query=query,
+                top_k=semantic_top_k,
+            )
         )
 
         for result in semantic_results:
 
-            chunk = result.chunk if hasattr(result, "chunk") else result
+            chunk = (
+                result.chunk
+                if hasattr(result, "chunk")
+                else result
+            )
 
             semantic_score = (
                 result.score
@@ -131,29 +169,69 @@ class IntelligentRetriever:
 
             path = str(chunk.path)
             key = self._chunk_key(chunk)
+
             if key in candidates:
 
-                if semantic_score > candidates[key].semantic_score:
+                if (
+                    semantic_score
+                    > candidates[key].semantic_score
+                ):
                     candidates[key].chunk = chunk
-                    candidates[key].semantic_score = semantic_score
+                    candidates[key].semantic_score = (
+                        semantic_score
+                    )
 
                 continue
 
             candidates[key] = RetrievalCandidate(
                 chunk=chunk,
                 semantic_score=semantic_score,
-                symbol_match=path in symbol_paths,
-                path_match=path in path_matches,
+                symbol_match=(
+                    path in symbol_paths
+                ),
+                path_match=(
+                    path in path_matches
+                ),
             )
 
         # 4. Final ranking
-        ranked_candidates = sorted(
+        return sorted(
             candidates.values(),
             key=lambda candidate: candidate.final_score,
             reverse=True,
+        )[:top_k]
+
+    def retrieve(
+        self,
+        query: str,
+        top_k: int = 5,
+    ) -> list[Chunk]:
+
+        candidates = self._retrieve_candidates(
+            query=query,
+            top_k=top_k,
         )
 
         return [
             candidate.chunk
-            for candidate in ranked_candidates[:top_k]
+            for candidate in candidates
+        ]
+
+    def retrieve_with_scores(
+        self,
+        query: str,
+        top_k: int = 5,
+    ) -> list[tuple[Chunk, float]]:
+
+        candidates = self._retrieve_candidates(
+            query=query,
+            top_k=top_k,
+        )
+
+        return [
+            (
+                candidate.chunk,
+                candidate.relevance_score,
+            )
+            for candidate in candidates
         ]

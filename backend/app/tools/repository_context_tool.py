@@ -1,18 +1,33 @@
 from pathlib import Path
+
 from app.tools.base_tool import BaseTool
 from app.tools.tool_request import ToolRequest
 from app.tools.tool_response import ToolResponse
 
-from app.project_knowledge.loader.repository_loader import RepositoryLoader
-from app.project_knowledge.loader.file_filter import FileFilter
-from app.project_knowledge.parser.generic_chunker import GenericChunker
+from app.project_knowledge.loader.repository_loader import (
+    RepositoryLoader,
+)
+from app.project_knowledge.loader.file_filter import (
+    FileFilter,
+)
+from app.project_knowledge.parser.generic_chunker import (
+    GenericChunker,
+)
 from app.project_knowledge.embeddings.gemini_embedding_service import (
     GeminiEmbeddingService,
 )
-from app.project_knowledge.retriever.simple_retriever import SimpleRetriever
-from app.project_knowledge.retriever.symbol_retriever import SymbolRetriever
-from app.project_knowledge.retriever.path_retriever import PathRetriever
-from app.project_knowledge.retriever.intelligent_retriever import IntelligentRetriever
+from app.project_knowledge.retriever.simple_retriever import (
+    SimpleRetriever,
+)
+from app.project_knowledge.retriever.symbol_retriever import (
+    SymbolRetriever,
+)
+from app.project_knowledge.retriever.path_retriever import (
+    PathRetriever,
+)
+from app.project_knowledge.retriever.intelligent_retriever import (
+    IntelligentRetriever,
+)
 
 from app.project_knowledge.vectorstore.in_memory_vector_store import (
     InMemoryVectorStore,
@@ -24,7 +39,9 @@ from app.core.config import GEMINI_API_KEY
 from app.repository_intelligence.analyzers.python_repository_analyzer import (
     PythonRepositoryAnalyzer,
 )
-from app.repository_intelligence.extractors.ast_extractor import ASTExtractor
+from app.repository_intelligence.extractors.ast_extractor import (
+    ASTExtractor,
+)
 from app.repository_intelligence.extractors.symbol_extractor import (
     SymbolExtractor,
 )
@@ -41,9 +58,16 @@ from app.project_knowledge.indexer.incremental_index_manager import (
 
 class RepositoryContextTool(BaseTool):
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        repository_root: Path | None = None,
+    ) -> None:
 
-        self._repository_root = Path.cwd()
+        self._repository_root = (
+            repository_root
+            if repository_root is not None
+            else Path.cwd()
+        )
 
         self._vector_store = InMemoryVectorStore()
 
@@ -51,8 +75,10 @@ class RepositoryContextTool(BaseTool):
             api_key=GEMINI_API_KEY,
         )
 
-        self._embedding_service = GeminiEmbeddingService(
-            client=client,
+        self._embedding_service = (
+            GeminiEmbeddingService(
+                client=client,
+            )
         )
 
         self._project_files = []
@@ -62,7 +88,9 @@ class RepositoryContextTool(BaseTool):
 
         self._retriever = IntelligentRetriever(
             semantic_retriever=SimpleRetriever(
-                embedding_service=self._embedding_service,
+                embedding_service=(
+                    self._embedding_service
+                ),
                 vector_store=self._vector_store,
             ),
             symbol_retriever=SymbolRetriever(
@@ -115,13 +143,37 @@ class RepositoryContextTool(BaseTool):
             project_files
         )
 
-        print("\n========== REPOSITORY INDEX ==========")
-        print(f"New files indexed : {stats['added']}")
-        print(f"Modified files    : {stats['modified']}")
-        print(f"Reused files      : {stats['reused']}")
-        print(f"Deleted files     : {stats['deleted']}")
-        print(f"Failed files      : {stats['failed']}")
-        print("======================================\n")
+        print(
+            "\n========== REPOSITORY INDEX =========="
+        )
+        print(
+            f"New files indexed : {stats['added']}"
+        )
+        print(
+            f"Modified files    : {stats['modified']}"
+        )
+        print(
+            f"Reused files      : {stats['reused']}"
+        )
+        print(
+            f"Deleted files     : {stats['deleted']}"
+        )
+        print(
+            f"Failed files      : {stats['failed']}"
+        )
+        print(
+            "======================================\n"
+        )
+
+    def retrieve_chunks(
+        self,
+        query: str,
+        top_k: int = 5,
+    ):
+        return self._retriever.retrieve_with_scores(
+            query=query,
+            top_k=top_k,
+        )
 
     def execute(
         self,
@@ -130,10 +182,17 @@ class RepositoryContextTool(BaseTool):
 
         try:
 
-            chunks = self._retriever.retrieve(
-                query=request.input,
-                top_k=5,
+            results = (
+                self._retriever.retrieve_with_scores(
+                    query=request.input,
+                    top_k=5,
+                )
             )
+
+            chunks = [
+                chunk
+                for chunk, _ in results
+            ]
 
             analysis = self._analysis
 
@@ -142,16 +201,41 @@ class RepositoryContextTool(BaseTool):
                 analysis,
             )
 
+            sources = []
+
+            for index, (
+                chunk,
+                relevance,
+            ) in enumerate(
+                results,
+                start=1,
+            ):
+                path = Path(chunk.path)
+
+                sources.append(
+                    {
+                        "id": index,
+                        "file_name": path.name,
+                        "file_path": str(path),
+                        "relevance": relevance,
+                        "content": chunk.content,
+                    }
+                )
+
             return ToolResponse(
                 result=[
                     {
                         "role": "user",
                         "content": (
-                            f"User Question:\n{request.input}\n\n"
+                            f"User Question:\n"
+                            f"{request.input}\n\n"
                             f"{context}"
                         ),
                     }
-                ]
+                ],
+                metadata={
+                    "sources": sources,
+                },
             )
 
         except Exception as e:
@@ -160,10 +244,11 @@ class RepositoryContextTool(BaseTool):
                 error=str(e),
             )
 
-    def _analyze_repository(self, project_files):
+    def _analyze_repository(
+        self,
+        project_files,
+    ):
 
-
-        
         analyzer = PythonRepositoryAnalyzer(
             ast_extractor=ASTExtractor(),
             symbol_extractor=SymbolExtractor(),

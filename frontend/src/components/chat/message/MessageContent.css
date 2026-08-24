@@ -1,0 +1,258 @@
+/* =========================================================
+   DevMind — Message Content
+   ========================================================= */
+
+.message-content {
+  color: inherit;
+
+  font-size: var(--dm-text-md);
+  line-height: var(--dm-line-relaxed);
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   Paragraphs
+   ========================================================= */
+
+.message-content p {
+  margin: 0 0 var(--dm-space-4);
+}
+
+.message-content p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* =========================================================
+   Headings
+   ========================================================= */
+
+.message-content h1,
+.message-content h2,
+.message-content h3,
+.message-content h4 {
+  margin:
+    var(--dm-space-5)
+    0
+    var(--dm-space-3);
+
+  color: var(--dm-text-primary);
+
+  line-height: var(--dm-line-tight);
+}
+
+.message-content h1 {
+  font-size: 1.5rem;
+}
+
+.message-content h2 {
+  font-size: 1.25rem;
+}
+
+.message-content h3 {
+  font-size: 1.1rem;
+}
+
+.message-content h4 {
+  font-size: 1rem;
+}
+
+
+/* =========================================================
+   Lists
+   ========================================================= */
+
+.message-content ul,
+.message-content ol {
+  margin:
+    var(--dm-space-3)
+    0
+    var(--dm-space-4);
+
+  padding-left: var(--dm-space-6);
+}
+
+.message-content li {
+  margin-bottom: var(--dm-space-2);
+}
+
+
+/* =========================================================
+   Links
+   ========================================================= */
+
+.message-content a {
+  color: var(--dm-accent);
+
+  text-decoration: none;
+}
+
+.message-content a:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================================================
+   Inline code
+   ========================================================= */
+
+.message-content code {
+  padding:
+    0.15rem
+    0.35rem;
+
+  border:
+    1px solid
+    var(--dm-border);
+
+  border-radius: var(--dm-radius-sm);
+
+  color: var(--dm-text-primary);
+  background: var(--dm-surface);
+
+  font-family: var(--dm-font-mono);
+  font-size: 0.875em;
+}
+
+
+/* =========================================================
+   Code blocks
+   ========================================================= */
+
+.message-content pre {
+  margin:
+    var(--dm-space-4)
+    0;
+
+  padding: var(--dm-space-4);
+
+  overflow-x: auto;
+
+  border:
+    1px solid
+    var(--dm-border);
+
+  border-radius: var(--dm-radius-lg);
+
+  background: var(--dm-surface);
+
+  line-height: var(--dm-line-normal);
+}
+
+.message-content pre code {
+  display: block;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  font-family: var(--dm-font-mono);
+  font-size: var(--dm-text-sm);
+
+  white-space: pre;
+}
+
+
+/* =========================================================
+   Blockquotes
+   ========================================================= */
+
+.message-content blockquote {
+  margin:
+    var(--dm-space-4)
+    0;
+
+  padding-left: var(--dm-space-4);
+
+  border-left:
+    3px solid
+    var(--dm-accent);
+
+  color: var(--dm-text-secondary);
+}
+
+
+/* =========================================================
+   Horizontal rule
+   ========================================================= */
+
+.message-content hr {
+  margin:
+    var(--dm-space-5)
+    0;
+
+  border: 0;
+
+  border-top:
+    1px solid
+    var(--dm-border);
+}
+
+
+/* =========================================================
+   Tables
+   ========================================================= */
+
+.message-content table {
+  width: 100%;
+
+  margin:
+    var(--dm-space-4)
+    0;
+
+  border-collapse: collapse;
+
+  overflow: hidden;
+
+  font-size: var(--dm-text-sm);
+}
+
+.message-content th,
+.message-content td {
+  padding:
+    var(--dm-space-2)
+    var(--dm-space-3);
+
+  border:
+    1px solid
+    var(--dm-border);
+
+  text-align: left;
+}
+
+.message-content th {
+  color: var(--dm-text-primary);
+  background: var(--dm-surface);
+}
+
+
+/* =========================================================
+   Images
+   ========================================================= */
+
+.message-content img {
+  max-width: 100%;
+
+  border-radius: var(--dm-radius-lg);
+}
+
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 760px) {
+  .message-content pre {
+    padding: var(--dm-space-3);
+  }
+
+  .message-content table {
+    display: block;
+
+    overflow-x: auto;
+  }
+}

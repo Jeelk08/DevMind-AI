@@ -1,0 +1,202 @@
+/* =========================================================
+   DevMind — Chat Composer
+   ========================================================= */
+
+.chat-composer-area {
+  flex-shrink: 0;
+
+  width: min(100%, 920px);
+
+  margin: 0 auto;
+
+  padding:
+    0
+    var(--dm-space-6)
+    var(--dm-space-5);
+}
+
+
+/* =========================================================
+   Composer
+   ========================================================= */
+
+.chat-composer {
+  overflow: hidden;
+
+  border:
+    1px solid
+    var(--dm-border);
+
+  border-radius: var(--dm-radius-xl);
+
+  background: var(--dm-surface);
+
+  box-shadow: var(--dm-shadow-md);
+
+  transition:
+    border-color var(--dm-duration-normal) var(--dm-ease-standard),
+    box-shadow var(--dm-duration-normal) var(--dm-ease-standard);
+}
+
+.chat-composer:focus-within {
+  border-color: var(--dm-border-focus);
+
+  box-shadow:
+    var(--dm-shadow-md),
+    0 0 0 1px var(--dm-accent-muted);
+}
+
+
+/* =========================================================
+   Input
+   ========================================================= */
+
+.chat-composer__input {
+  display: block;
+
+  width: 100%;
+  min-height: 48px;
+  max-height: 180px;
+
+  padding:
+    var(--dm-space-4)
+    var(--dm-space-4)
+    var(--dm-space-2);
+
+  border: 0;
+  outline: 0;
+
+  resize: none;
+
+  overflow-y: auto;
+
+  color: var(--dm-text-primary);
+  background: transparent;
+
+  font-size: var(--dm-text-md);
+  line-height: var(--dm-line-normal);
+}
+
+.chat-composer__input::placeholder {
+  color: var(--dm-text-muted);
+}
+
+
+/* =========================================================
+   Footer
+   ========================================================= */
+
+.chat-composer__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding:
+    var(--dm-space-2)
+    var(--dm-space-3);
+}
+
+.chat-composer__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--dm-space-1);
+}
+
+.chat-composer__actions button {
+  padding:
+    var(--dm-space-2)
+    var(--dm-space-2);
+
+  border-radius: var(--dm-radius-md);
+
+  color: var(--dm-text-muted);
+
+  font-size: var(--dm-text-xs);
+
+  transition:
+    color var(--dm-duration-fast) var(--dm-ease-standard),
+    background-color var(--dm-duration-fast) var(--dm-ease-standard);
+}
+
+.chat-composer__actions button:hover {
+  color: var(--dm-text-secondary);
+  background: var(--dm-surface-hover);
+}
+
+
+/* =========================================================
+   Send
+   ========================================================= */
+
+.chat-composer__send {
+  display: grid;
+  place-items: center;
+
+  width: 32px;
+  height: 32px;
+
+  border-radius: var(--dm-radius-md);
+
+  color: white;
+  background: var(--dm-accent);
+
+  font-size: var(--dm-text-lg);
+  font-weight: 600;
+
+  transition:
+    background-color var(--dm-duration-fast) var(--dm-ease-standard),
+    transform var(--dm-duration-fast) var(--dm-ease-standard),
+    opacity var(--dm-duration-fast) var(--dm-ease-standard);
+}
+
+.chat-composer__send:hover:not(:disabled) {
+  background: var(--dm-accent-hover);
+}
+
+.chat-composer__send:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.chat-composer__send:disabled {
+  opacity: 0.35;
+
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   Hint
+   ========================================================= */
+
+.chat-composer__hint {
+  margin-top: var(--dm-space-2);
+
+  color: var(--dm-text-muted);
+
+  font-size: 0.6875rem;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+
+@media (max-width: 760px) {
+  .chat-composer-area {
+    padding:
+      0
+      var(--dm-space-4)
+      var(--dm-space-4);
+  }
+}
+
+.chat-composer__send:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.chat-composer__input:disabled {
+  cursor: wait;
+  opacity: 0.75;
+}

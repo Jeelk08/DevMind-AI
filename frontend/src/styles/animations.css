@@ -1,0 +1,298 @@
+/* =========================================================
+   DevMind — Animation System
+   ========================================================= */
+
+/*
+  Animation philosophy:
+
+  - Short
+  - Purposeful
+  - GPU-light
+  - State-driven
+  - No continuous heavy simulation
+*/
+
+
+/* =========================================================
+   Base transitions
+   ========================================================= */
+
+.dm-transition {
+  transition:
+    background-color var(--dm-duration-normal) var(--dm-ease-standard),
+    border-color var(--dm-duration-normal) var(--dm-ease-standard),
+    color var(--dm-duration-normal) var(--dm-ease-standard),
+    opacity var(--dm-duration-normal) var(--dm-ease-standard),
+    transform var(--dm-duration-normal) var(--dm-ease-standard);
+}
+
+
+/* =========================================================
+   Fade
+   ========================================================= */
+
+@keyframes dm-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.dm-fade-in {
+  animation:
+    dm-fade-in var(--dm-duration-normal) var(--dm-ease-standard)
+    both;
+}
+
+
+/* =========================================================
+   Subtle slide-in
+   ========================================================= */
+
+@keyframes dm-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dm-slide-up {
+  animation:
+    dm-slide-up var(--dm-duration-normal) var(--dm-ease-emphasis)
+    both;
+}
+
+
+/* =========================================================
+   Neural pulse
+   ========================================================= */
+
+@keyframes dm-neural-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: scale(1.08);
+  }
+}
+
+.dm-neural-pulse {
+  animation:
+    dm-neural-pulse 2.4s var(--dm-ease-standard)
+    infinite;
+}
+
+
+/* =========================================================
+   Neural activity
+   ========================================================= */
+
+@keyframes dm-neural-activity {
+  0% {
+    opacity: 0.3;
+    transform: scale(0.98);
+  }
+
+  50% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0.3;
+    transform: scale(0.98);
+  }
+}
+
+.dm-neural-active {
+  animation:
+    dm-neural-activity 1.6s var(--dm-ease-standard)
+    infinite;
+}
+
+
+/* =========================================================
+   Processing indicator
+   ========================================================= */
+
+@keyframes dm-processing {
+  0% {
+    opacity: 0.35;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.35;
+  }
+}
+
+.dm-processing {
+  animation:
+    dm-processing 1.2s ease-in-out
+    infinite;
+}
+
+
+/* =========================================================
+   Streaming indicator
+   ========================================================= */
+
+@keyframes dm-streaming {
+  0% {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-1px);
+  }
+
+  100% {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+}
+
+.dm-streaming {
+  animation:
+    dm-streaming 1s ease-in-out
+    infinite;
+}
+
+
+/* =========================================================
+   Loading dots
+   ========================================================= */
+
+@keyframes dm-dot {
+  0%,
+  60%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+
+  30% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+.dm-loading-dot {
+  animation:
+    dm-dot 1.2s ease-in-out
+    infinite;
+}
+
+.dm-loading-dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.dm-loading-dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+
+/* =========================================================
+   Success pulse
+   ========================================================= */
+
+@keyframes dm-success {
+  0% {
+    box-shadow: 0 0 0 0 var(--dm-success-muted);
+  }
+
+  100% {
+    box-shadow: 0 0 0 8px transparent;
+  }
+}
+
+.dm-success-pulse {
+  animation:
+    dm-success 500ms var(--dm-ease-standard)
+    both;
+}
+
+
+/* =========================================================
+   Warning pulse
+   ========================================================= */
+
+@keyframes dm-warning {
+  0% {
+    box-shadow: 0 0 0 0 var(--dm-warning-muted);
+  }
+
+  100% {
+    box-shadow: 0 0 0 8px transparent;
+  }
+}
+
+.dm-warning-pulse {
+  animation:
+    dm-warning 500ms var(--dm-ease-standard)
+    both;
+}
+
+
+/* =========================================================
+   Error pulse
+   ========================================================= */
+
+@keyframes dm-error {
+  0% {
+    box-shadow: 0 0 0 0 var(--dm-error-muted);
+  }
+
+  100% {
+    box-shadow: 0 0 0 8px transparent;
+  }
+}
+
+.dm-error-pulse {
+  animation:
+    dm-error 500ms var(--dm-ease-standard)
+    both;
+}
+
+
+/* =========================================================
+   Reduced motion
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .dm-neural-pulse,
+  .dm-neural-active,
+  .dm-processing,
+  .dm-streaming,
+  .dm-loading-dot {
+    animation: none;
+  }
+
+  .dm-fade-in,
+  .dm-slide-up {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .dm-transition {
+    transition: none;
+  }
+}

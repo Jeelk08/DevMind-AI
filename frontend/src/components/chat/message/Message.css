@@ -1,0 +1,124 @@
+/* =========================================================
+   DevMind — Message
+   ========================================================= */
+
+.message {
+  width: 100%;
+  max-width: var(--dm-content-max-width);
+
+  margin: 0 auto;
+
+  padding: var(--dm-space-5) 0;
+}
+
+
+/* =========================================================
+   Header
+   ========================================================= */
+
+.message__header {
+  display: flex;
+  align-items: center;
+  gap: var(--dm-space-2);
+
+  margin-bottom: var(--dm-space-2);
+}
+
+.message__avatar {
+  display: grid;
+  place-items: center;
+
+  flex-shrink: 0;
+
+  width: 24px;
+  height: 24px;
+
+  border:
+    1px solid
+    var(--dm-border);
+
+  border-radius: var(--dm-radius-md);
+
+  color: var(--dm-text-secondary);
+  background: var(--dm-surface);
+
+  font-size: 0.6875rem;
+  font-weight: 600;
+}
+
+.message--assistant .message__avatar {
+  color: var(--dm-text-primary);
+  background: var(--dm-accent-muted);
+
+  box-shadow:
+    0 0 12px var(--dm-accent-glow);
+}
+
+.message__role {
+  color: var(--dm-text-secondary);
+
+  font-size: var(--dm-text-xs);
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   Content
+   ========================================================= */
+
+.message__content {
+  padding-left: 32px;
+
+  color: var(--dm-text-primary);
+
+  font-size: var(--dm-text-md);
+  line-height: var(--dm-line-relaxed);
+
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   User message
+   ========================================================= */
+
+.message--user {
+  border-bottom:
+    1px solid
+    var(--dm-border-subtle);
+}
+
+.message--user .message__content {
+  color: var(--dm-text-primary);
+}
+
+
+/* =========================================================
+   Assistant message
+   ========================================================= */
+
+.message--assistant {
+  border-bottom:
+    1px solid
+    var(--dm-border-subtle);
+}
+
+.message--assistant .message__content {
+  color: var(--dm-text-secondary);
+}
+
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 760px) {
+  .message {
+    padding: var(--dm-space-4) 0;
+  }
+
+  .message__content {
+    padding-left: 0;
+  }
+}

@@ -1,0 +1,11 @@
+/* =========================================================
+   DevMind — Message List
+   ========================================================= */
+
+.message-list {
+  width: 100%;
+  max-width: var(--dm-content-max-width);
+  position: relative;
+
+  margin: 0 auto;
+}

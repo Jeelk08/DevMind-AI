@@ -1,0 +1,151 @@
+.add-project-modal__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.add-project-modal {
+  width: min(460px, 100%);
+
+  background: var(
+    --color-surface,
+    #18181b
+  );
+
+  border: 1px solid
+    var(--color-border, #27272a);
+
+  border-radius: 14px;
+
+  box-shadow: 0 20px 60px
+    rgba(0, 0, 0, 0.35);
+
+  overflow: hidden;
+}
+
+.add-project-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  padding: 20px;
+
+  border-bottom: 1px solid
+    var(--color-border, #27272a);
+}
+
+.add-project-modal__header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.add-project-modal__header p {
+  margin: 6px 0 0;
+
+  font-size: 13px;
+
+  color: var(
+    --color-text-muted,
+    #a1a1aa
+  );
+}
+
+.add-project-modal__close {
+  border: none;
+  background: transparent;
+
+  font-size: 24px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  color: inherit;
+}
+
+.add-project-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  padding: 20px;
+}
+
+.add-project-modal__form label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  font-size: 13px;
+}
+
+.add-project-modal__form input {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 10px 12px;
+
+  border: 1px solid
+    var(--color-border, #27272a);
+
+  border-radius: 8px;
+
+  background: var(
+    --color-background,
+    #09090b
+  );
+
+  color: inherit;
+
+  outline: none;
+}
+
+.add-project-modal__form input:focus {
+  border-color: #71717a;
+}
+
+.add-project-modal__error {
+  margin: 0;
+
+  font-size: 13px;
+
+  color: #ef4444;
+}
+
+.add-project-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+
+  padding-top: 4px;
+}
+
+.add-project-modal__actions button {
+  padding: 9px 14px;
+
+  border-radius: 8px;
+  border: 1px solid
+    var(--color-border, #27272a);
+
+  cursor: pointer;
+
+  background: transparent;
+  color: inherit;
+}
+
+.add-project-modal__actions button[type="submit"] {
+  background: #27272a;
+}
+
+.add-project-modal__actions button:disabled,
+.add-project-modal__close:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

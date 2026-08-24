@@ -1,0 +1,134 @@
+/* =========================================================
+   DevMind — App Shell
+   ========================================================= */
+
+.app-shell {
+  display: grid;
+  grid-template-columns:
+    var(--dm-sidebar-width)
+    minmax(0, 1fr)
+    var(--dm-context-width);
+
+  width: 100%;
+  min-height: 100vh;
+
+  overflow: hidden;
+
+  background: var(--dm-bg-primary);
+}
+
+
+/* =========================================================
+   Shared regions
+   ========================================================= */
+
+.app-shell__sidebar,
+.app-shell__main,
+.app-shell__context {
+  min-width: 0;
+  min-height: 0;
+}
+
+
+/* =========================================================
+   Sidebar
+   ========================================================= */
+
+.app-shell__sidebar {
+  position: relative;
+
+  height: 100vh;
+
+  overflow-y: auto;
+
+  background: var(--dm-bg-secondary);
+
+  border-right:
+    var(--dm-border-width)
+    solid
+    var(--dm-border-subtle);
+}
+
+
+/* =========================================================
+   Main workspace
+   ========================================================= */
+
+.app-shell__main {
+  position: relative;
+
+  height: 100vh;
+
+  overflow: hidden;
+
+  background: var(--dm-bg-primary);
+}
+
+
+/* =========================================================
+   Context panel
+   ========================================================= */
+
+.app-shell__context {
+  position: relative;
+
+  height: 100vh;
+
+  overflow-y: auto;
+
+  background: var(--dm-bg-secondary);
+
+  border-left:
+    var(--dm-border-width)
+    solid
+    var(--dm-border-subtle);
+}
+
+
+/* =========================================================
+   Temporary placeholders
+   ========================================================= */
+
+.app-shell__placeholder {
+  padding: var(--dm-space-4);
+
+  color: var(--dm-text-muted);
+
+  font-size: var(--dm-text-sm);
+}
+
+
+/* =========================================================
+   Responsive behavior
+   ========================================================= */
+
+/*
+  The desktop/laptop layout is our primary target.
+
+  When the viewport becomes narrower, the context panel
+  disappears from the permanent layout rather than
+  squeezing the chat workspace.
+*/
+
+@media (max-width: 1100px) {
+  .app-shell {
+    grid-template-columns:
+      var(--dm-sidebar-width)
+      minmax(0, 1fr);
+  }
+
+  .app-shell__context {
+    display: none;
+  }
+}
+
+
+@media (max-width: 760px) {
+  .app-shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .app-shell__sidebar {
+    display: none;
+  }
+}

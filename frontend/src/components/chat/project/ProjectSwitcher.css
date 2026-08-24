@@ -1,0 +1,258 @@
+/* =========================================================
+   DevMind — Project Switcher
+   ========================================================= */
+
+.project-switcher {
+  position: relative;
+}
+
+
+/* =========================================================
+   Trigger
+   ========================================================= */
+
+.project-switcher__trigger {
+  display: flex;
+  align-items: center;
+
+  gap: var(--dm-space-2);
+
+  min-width: 220px;
+
+  padding: var(--dm-space-2);
+
+  border:
+    1px solid
+    transparent;
+
+  border-radius: var(--dm-radius-lg);
+
+  color: var(--dm-text-primary);
+
+  background: transparent;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background-color var(--dm-duration-fast) var(--dm-ease-standard),
+    border-color var(--dm-duration-fast) var(--dm-ease-standard);
+}
+
+.project-switcher__trigger:hover,
+.project-switcher__trigger[aria-expanded="true"] {
+  border-color: var(--dm-border);
+
+  background: var(--dm-surface);
+}
+
+
+/* =========================================================
+   Trigger content
+   ========================================================= */
+
+.project-switcher__icon {
+  display: grid;
+  place-items: center;
+
+  flex-shrink: 0;
+
+  width: 30px;
+  height: 30px;
+
+  border-radius: var(--dm-radius-md);
+
+  background: var(--dm-accent-muted);
+
+  font-size: var(--dm-text-sm);
+}
+
+.project-switcher__info {
+  display: flex;
+  flex-direction: column;
+
+  flex: 1;
+  min-width: 0;
+}
+
+.project-switcher__name {
+  overflow: hidden;
+
+  color: var(--dm-text-primary);
+
+  font-size: var(--dm-text-sm);
+  font-weight: 600;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-switcher__status {
+  margin-top: 2px;
+
+  overflow: hidden;
+
+  color: var(--dm-text-muted);
+
+  font-size: var(--dm-text-xs);
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-switcher__arrow {
+  flex-shrink: 0;
+
+  color: var(--dm-text-muted);
+
+  font-size: var(--dm-text-xs);
+
+  transition:
+    transform var(--dm-duration-fast) var(--dm-ease-standard);
+}
+
+.project-switcher__arrow--open {
+  transform: rotate(180deg);
+}
+
+
+/* =========================================================
+   Menu
+   ========================================================= */
+
+.project-switcher__menu {
+  position: absolute;
+
+  top: calc(100% + 8px);
+  left: 0;
+
+  z-index: 100;
+
+  width: 280px;
+
+  padding: var(--dm-space-2);
+
+  border:
+    1px solid
+    var(--dm-border);
+
+  border-radius: var(--dm-radius-xl);
+
+  background: var(--dm-bg-secondary);
+
+  box-shadow: var(--dm-shadow-lg);
+
+  animation:
+    dm-fade-in
+    var(--dm-duration-fast)
+    var(--dm-ease-standard);
+}
+
+.project-switcher__menu-header {
+  padding:
+    var(--dm-space-2)
+    var(--dm-space-3);
+
+  color: var(--dm-text-muted);
+
+  font-size: var(--dm-text-xs);
+  font-weight: 600;
+
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+
+/* =========================================================
+   Project item
+   ========================================================= */
+
+.project-switcher__item {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+
+  gap: var(--dm-space-3);
+
+  padding: var(--dm-space-3);
+
+  border-radius: var(--dm-radius-lg);
+
+  color: var(--dm-text-primary);
+
+  background: transparent;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background-color var(--dm-duration-fast) var(--dm-ease-standard);
+}
+
+.project-switcher__item:hover {
+  background: var(--dm-surface-hover);
+}
+
+.project-switcher__item--active {
+  background: var(--dm-accent-muted);
+}
+
+.project-switcher__item-icon {
+  display: grid;
+  place-items: center;
+
+  flex-shrink: 0;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: var(--dm-radius-md);
+
+  background: var(--dm-surface);
+
+  font-size: var(--dm-text-xs);
+}
+
+.project-switcher__item-info {
+  display: flex;
+  flex-direction: column;
+
+  flex: 1;
+  min-width: 0;
+}
+
+.project-switcher__item-name {
+  overflow: hidden;
+
+  color: var(--dm-text-primary);
+
+  font-size: var(--dm-text-sm);
+  font-weight: 500;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-switcher__item-status {
+  margin-top: 2px;
+
+  overflow: hidden;
+
+  color: var(--dm-text-muted);
+
+  font-size: var(--dm-text-xs);
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-switcher__check {
+  flex-shrink: 0;
+
+  color: var(--dm-accent);
+
+  font-size: var(--dm-text-sm);
+}

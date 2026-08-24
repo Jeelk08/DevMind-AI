@@ -1,0 +1,64 @@
+/* =========================================================
+   Empty Conversation
+   ========================================================= */
+
+.empty-conversation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 100%;
+
+  padding: var(--dm-space-8);
+
+  text-align: center;
+}
+
+.empty-conversation__icon {
+  display: grid;
+  place-items: center;
+
+  width: 48px;
+  height: 48px;
+
+  margin-bottom: var(--dm-space-4);
+
+  border:
+    1px solid
+    var(--dm-border);
+
+  border-radius: var(--dm-radius-lg);
+
+  background: var(--dm-surface);
+
+  font-size: var(--dm-text-lg);
+
+  box-shadow:
+    0 0 24px
+    var(--dm-accent-glow);
+}
+
+.empty-conversation__title {
+  margin: 0;
+
+  color: var(--dm-text-primary);
+
+  font-size: var(--dm-text-lg);
+  font-weight: 600;
+}
+
+.empty-conversation__description {
+  max-width: 380px;
+
+  margin:
+    var(--dm-space-2)
+    0
+    0;
+
+  color: var(--dm-text-muted);
+
+  font-size: var(--dm-text-sm);
+  line-height: var(--dm-line-normal);
+}

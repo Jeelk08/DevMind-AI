@@ -1,0 +1,28 @@
+.streaming-cursor {
+  display: inline-block;
+
+  width: 2px;
+  height: 1em;
+
+  margin-left: 3px;
+
+  vertical-align: -0.1em;
+
+  background: var(--dm-accent);
+
+  animation:
+    streaming-cursor-blink
+    1s step-end infinite;
+}
+
+@keyframes streaming-cursor-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
