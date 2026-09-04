@@ -256,3 +256,129 @@
 
   font-size: var(--dm-text-sm);
 }
+
+
+/* =========================================================
+   Connection status
+   ========================================================= */
+
+.project-switcher__connection {
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.project-switcher__connection--connected {
+  background: var(--dm-success, #34d399);
+  box-shadow: 0 0 0 3px
+    color-mix(
+      in srgb,
+      var(--dm-success, #34d399) 12%,
+      transparent
+    );
+}
+
+.project-switcher__connection--disconnected {
+  background: var(--dm-text-muted);
+}
+
+
+/* =========================================================
+   Project item connection
+   ========================================================= */
+
+.project-switcher__item-connection {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.project-switcher__item-connection--connected {
+  background: var(--dm-success, #34d399);
+}
+
+.project-switcher__item-connection--disconnected {
+  background: var(--dm-text-muted);
+}
+
+
+/* =========================================================
+   Divider
+   ========================================================= */
+
+.project-switcher__divider {
+  height: 1px;
+  margin: var(--dm-space-2) 0;
+  background: var(--dm-border);
+}
+
+
+/* =========================================================
+   Connection actions
+   ========================================================= */
+
+.project-switcher__actions {
+  padding: var(--dm-space-1);
+}
+
+.project-switcher__connection-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 36px;
+  padding:
+    var(--dm-space-2)
+    var(--dm-space-3);
+
+  border: 1px solid var(--dm-border);
+  border-radius: var(--dm-radius-lg);
+
+  font-size: var(--dm-text-xs);
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color var(--dm-duration-fast)
+      var(--dm-ease-standard),
+    border-color var(--dm-duration-fast)
+      var(--dm-ease-standard),
+    transform var(--dm-duration-fast)
+      var(--dm-ease-standard);
+}
+
+.project-switcher__connection-action:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.project-switcher__connection-action:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.project-switcher__connection-action:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.project-switcher__connection-action--disconnect {
+  color: var(--dm-text-primary);
+  background: var(--dm-surface);
+}
+
+.project-switcher__connection-action--disconnect:hover:not(:disabled) {
+  border-color: var(--dm-border-strong, var(--dm-border));
+  background: var(--dm-surface-hover);
+}
+
+.project-switcher__connection-action--reconnect {
+  color: var(--dm-accent);
+  background: var(--dm-accent-muted);
+  border-color: var(--dm-accent);
+}
+
+.project-switcher__connection-action--reconnect:hover:not(:disabled) {
+  background: var(--dm-accent-muted);
+}

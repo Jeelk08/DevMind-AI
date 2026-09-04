@@ -10,3 +10,4 @@ class ProjectResponse(BaseModel):
     id: str
     name: str
     repository_path: str
+    connected: bool

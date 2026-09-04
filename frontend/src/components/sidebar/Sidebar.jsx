@@ -240,19 +240,22 @@ function Sidebar() {
 
         {/* Projects */}
         <section className="sidebar__section">
-          <h2 className="sidebar__section-title">
-            Projects
-          </h2>
-          <button
-            type="button"
-            className="sidebar__section-add"
-            aria-label="Add project"
-            onClick={() =>
-              setIsAddProjectOpen(true)
-            }
-          >
-            +
-          </button>
+          <div className="sidebar__section-header">
+            <h2 className="sidebar__section-title">
+              Projects
+            </h2>
+
+            <button
+              type="button"
+              className="sidebar__section-add"
+              aria-label="Add project"
+              onClick={() =>
+                setIsAddProjectOpen(true)
+              }
+            >
+              +
+            </button>
+          </div>
 
           <div className="sidebar__items">
             {projects.length === 0 ? (

@@ -9,7 +9,10 @@ import EmptyConversation from "./EmptyConversation";
 
 const BOTTOM_THRESHOLD = 80;
 
-function ChatWorkspace() {
+function ChatWorkspace({
+  isContextOpen,
+  onToggleContext,
+}) {
   const {
     activeProject,
     projects,
@@ -23,6 +26,11 @@ function ChatWorkspace() {
     clearChatError,
     retryMessage,
     sendMessage,
+    disconnectProject,
+    reconnectProject,
+    removeProject,
+    uploadFiles,
+    isUploading,
   } = useDevMindContext();
 
   const conversationRef = useRef(null);
@@ -91,6 +99,9 @@ function ChatWorkspace() {
           projects={projects}
           activeProject={activeProject}
           onProjectChange={switchProject}
+          onDisconnect={disconnectProject}
+          onReconnect={reconnectProject}
+          onRemove={removeProject}
         />
       </header>
 
@@ -153,7 +164,9 @@ function ChatWorkspace() {
                     onClick={retryMessage}
                     disabled={isProcessing}
                   >
-                    {isProcessing ? "Retrying..." : "Retry"}
+                    {isProcessing
+                      ? "Retrying..."
+                      : "Retry"}
                   </button>
 
                   <button
@@ -195,11 +208,15 @@ function ChatWorkspace() {
       {/* Composer */}
       <ChatComposer
         onSend={sendMessage}
+        onUpload={uploadFiles}
         isProcessing={
           isProcessing ||
           isConversationLoading ||
           Boolean(conversationError)
         }
+        isContextOpen={isContextOpen}
+        onToggleContext={onToggleContext}
+        isUploading={isUploading}
       />
     </div>
   );

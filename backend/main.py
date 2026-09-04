@@ -3,13 +3,9 @@ from fastapi import FastAPI
 from app.routes.chat_routes import router
 from app.routes.project_routes import router as project_router
 from app.routes.context_routes import router as context_router
-
-from app.tools.repository_context_tool import (
-    RepositoryContextTool,
-)
-
+from app.tools.repository_context_tool import (RepositoryContextTool,)
 from fastapi.middleware.cors import CORSMiddleware
-
+from app.routes.upload_routes import router as upload_router
 
 app = FastAPI(title="DevMind AI")
 
@@ -32,3 +28,4 @@ app.add_middleware(
 app.include_router(router)
 app.include_router(context_router)
 app.include_router(project_router)
+app.include_router(upload_router)

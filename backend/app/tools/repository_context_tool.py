@@ -165,6 +165,166 @@ class RepositoryContextTool(BaseTool):
             "======================================\n"
         )
 
+
+
+    def refresh_index(self) -> dict:
+        """
+        Re-scan the repository and incrementally update
+        the persistent knowledge index.
+
+        The vector store and repository retrievers are rebuilt
+        from the resulting current project state.
+        """
+
+        self._index_repository()
+
+        self._retriever = IntelligentRetriever(
+            semantic_retriever=SimpleRetriever(
+                embedding_service=(
+                    self._embedding_service
+                ),
+                vector_store=self._vector_store,
+            ),
+            symbol_retriever=SymbolRetriever(
+                analysis=self._analysis,
+            ),
+            path_retriever=PathRetriever(
+                files=self._project_files,
+            ),
+        )
+
+        return self._get_index_stats()
+
+
+
+    def _get_index_stats(self) -> dict:
+        """
+        Read the current persistent index statistics.
+        """
+
+        cache_path = (
+            self._repository_root.parent
+            / ".devmind"
+            / "repository_index.json"
+        )
+
+        if not cache_path.exists():
+            return {
+                "indexed_files": 0,
+                "chunks": 0,
+            }
+
+        try:
+            import json
+
+            with cache_path.open(
+                "r",
+                encoding="utf-8",
+            ) as file:
+                cache = json.load(file)
+
+        except (
+            OSError,
+            json.JSONDecodeError,
+        ):
+            return {
+                "indexed_files": 0,
+                "chunks": 0,
+            }
+
+        files = cache.get(
+            "files",
+            {}
+        )
+
+        if not isinstance(files, dict):
+            return {
+                "indexed_files": 0,
+                "chunks": 0,
+            }
+
+        total_chunks = 0
+        indexed_files = 0
+
+        for file_data in files.values():
+
+            if not isinstance(
+                file_data,
+                dict,
+            ):
+                continue
+
+            chunks = file_data.get(
+                "chunks",
+                []
+            )
+
+            if not isinstance(
+                chunks,
+                list,
+            ):
+                continue
+
+            indexed_files += 1
+            total_chunks += len(chunks)
+
+        return {
+            "indexed_files": indexed_files,
+            "chunks": total_chunks,
+        }
+
+
+    def refresh_index(self) -> dict:
+        """
+        Re-index the current repository state.
+
+        This is used when new files are uploaded into the
+        repository's DevMind-managed upload directory.
+        """
+
+        loader = RepositoryLoader(
+            file_filter=FileFilter(),
+        )
+
+        project_files = loader.load(
+            self._repository_root,
+        )
+
+        self._project_files = project_files
+
+        self._analysis = self._analyze_repository(
+            project_files
+        )
+
+        index_manager = IncrementalIndexManager(
+            repository_root=self._repository_root,
+            chunker=GenericChunker(),
+            embedding_service=self._embedding_service,
+            vector_store=self._vector_store,
+        )
+
+        stats = index_manager.update(
+            project_files
+        )
+
+        # Rebuild retrievers so path/symbol retrieval
+        # sees the newly indexed project state.
+        self._retriever = IntelligentRetriever(
+            semantic_retriever=SimpleRetriever(
+                embedding_service=self._embedding_service,
+                vector_store=self._vector_store,
+            ),
+            symbol_retriever=SymbolRetriever(
+                analysis=self._analysis,
+            ),
+            path_retriever=PathRetriever(
+                files=self._project_files,
+            ),
+        )
+
+        return stats
+
+
     def retrieve_chunks(
         self,
         query: str,
@@ -248,6 +408,11 @@ class RepositoryContextTool(BaseTool):
         self,
         project_files,
     ):
+        python_files = [
+            project_file
+            for project_file in project_files
+            if project_file.path.suffix.lower() == ".py"
+        ]
 
         analyzer = PythonRepositoryAnalyzer(
             ast_extractor=ASTExtractor(),
@@ -257,7 +422,7 @@ class RepositoryContextTool(BaseTool):
         )
 
         return analyzer.analyze(
-            project_files=project_files,
+            project_files=python_files,
             repository_root=self._repository_root,
         )
 

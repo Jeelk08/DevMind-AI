@@ -86,9 +86,7 @@ function useChat() {
     setFailedMessage(null);
   };
 
-  const loadMessages = (
-    conversationId
-  ) => {
+  const loadMessages = (conversationId) => {
     const conversation =
       savedMessages[conversationId] || [];
 
@@ -180,7 +178,8 @@ function useChat() {
       const result =
         await sendChatMessage(
           sessionId,
-          trimmedContent
+          trimmedContent,
+          projectId
         );
 
       const assistantMessage = {
@@ -236,6 +235,7 @@ function useChat() {
 
     const {
       content,
+      projectId,
       conversationId,
       sessionId,
     } = failedMessage;
@@ -247,7 +247,8 @@ function useChat() {
       const result =
         await sendChatMessage(
           sessionId,
-          content
+          content,
+          projectId
         );
 
       const assistantMessage = {

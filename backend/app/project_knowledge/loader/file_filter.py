@@ -1,9 +1,11 @@
 from pathlib import Path
 
+
 class FileFilter:
 
     IGNORED_DIRS = {
         ".git",
+        ".devmind",
         ".idea",
         ".vscode",
         "__pycache__",
@@ -22,6 +24,11 @@ class FileFilter:
 
     IGNORED_FILES = {
         ".venv",
+        "package-lock.json",
+        "yarn.lock",
+        "pnpm-lock.yaml",
+        "bun.lock",
+        "bun.lockb",
     }
 
     SUPPORTED_EXTENSIONS = {
@@ -38,7 +45,6 @@ class FileFilter:
         ".yml",
         ".yaml",
     }
-
 
     def should_ignore(self, path: Path) -> bool:
 

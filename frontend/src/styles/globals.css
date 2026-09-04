@@ -193,3 +193,172 @@ svg {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* =========================================================
+   DevMind — Button System
+   ========================================================= */
+
+/* ---------- Base ---------- */
+
+.dm-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dm-space-2);
+
+  min-height: 36px;
+  padding:
+    var(--dm-space-2)
+    var(--dm-space-3);
+
+  border: 1px solid transparent;
+  border-radius: var(--dm-radius-lg);
+
+  color: var(--dm-text-primary);
+  background: var(--dm-surface);
+
+  font-size: var(--dm-text-sm);
+  font-weight: 600;
+  line-height: 1;
+
+  cursor: pointer;
+  user-select: none;
+
+  transition:
+    background-color var(--dm-duration-fast)
+      var(--dm-ease-standard),
+    border-color var(--dm-duration-fast)
+      var(--dm-ease-standard),
+    color var(--dm-duration-fast)
+      var(--dm-ease-standard),
+    transform var(--dm-duration-fast)
+      var(--dm-ease-standard),
+    box-shadow var(--dm-duration-fast)
+      var(--dm-ease-standard);
+}
+
+.dm-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: var(--dm-surface-hover);
+}
+
+.dm-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.dm-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+
+/* ---------- Primary ---------- */
+
+.dm-button--primary {
+  border-color: var(--dm-accent);
+  color: var(--dm-bg-primary);
+  background: var(--dm-accent);
+}
+
+.dm-button--primary:hover:not(:disabled) {
+  background: var(--dm-accent-hover, var(--dm-accent));
+  box-shadow: var(--dm-shadow-sm);
+}
+
+
+/* ---------- Secondary ---------- */
+
+.dm-button--secondary {
+  border-color: var(--dm-border);
+  color: var(--dm-text-primary);
+  background: var(--dm-surface);
+}
+
+.dm-button--secondary:hover:not(:disabled) {
+  border-color: var(--dm-border-focus);
+  background: var(--dm-surface-hover);
+}
+
+
+/* ---------- Ghost ---------- */
+
+.dm-button--ghost {
+  border-color: transparent;
+  background: transparent;
+}
+
+.dm-button--ghost:hover:not(:disabled) {
+  background: var(--dm-surface-hover);
+}
+
+
+/* ---------- Danger ---------- */
+
+.dm-button--danger {
+  border-color: var(--dm-border);
+  color: var(--dm-danger, #f87171);
+  background: var(--dm-surface);
+}
+
+.dm-button--danger:hover:not(:disabled) {
+  border-color: var(--dm-danger, #f87171);
+  background: var(
+    --dm-danger-muted,
+    rgba(248, 113, 113, 0.08)
+  );
+}
+
+
+/* ---------- Small ---------- */
+
+.dm-button--sm {
+  min-height: 30px;
+  padding:
+    var(--dm-space-1)
+    var(--dm-space-2);
+
+  border-radius: var(--dm-radius-md);
+  font-size: var(--dm-text-xs);
+}
+
+
+/* ---------- Large ---------- */
+
+.dm-button--lg {
+  min-height: 42px;
+  padding:
+    var(--dm-space-3)
+    var(--dm-space-4);
+
+  border-radius: var(--dm-radius-xl);
+}
+
+
+/* ---------- Icon button ---------- */
+
+.dm-button--icon {
+  width: 36px;
+  height: 36px;
+  min-height: 36px;
+  padding: 0;
+  border-radius: var(--dm-radius-md);
+}
+
+.dm-button--icon.dm-button--sm {
+  width: 30px;
+  height: 30px;
+  min-height: 30px;
+}
+
+.dm-button--icon.dm-button--lg {
+  width: 42px;
+  height: 42px;
+  min-height: 42px;
+}
+
+
+/* ---------- Full width ---------- */
+
+.dm-button--full {
+  width: 100%;
+}

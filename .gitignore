@@ -18,3 +18,24 @@ dist/
 
 # OS files
 .DS_Store
+
+# DevMind generated repository cache
+.devmind/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Python virtual environment
+venv/
+
+# Frontend dependencies
+node_modules/
+
+# Environment / secrets
+.env
+.env.*
+
+
+# DevMind runtime database
+backend/app/database/devmind.db

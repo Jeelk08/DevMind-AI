@@ -360,3 +360,77 @@ def test_modified_file_embedding_failure_preserves_old_knowledge(
         cache["files"]["app.py"]["chunks"][0]["content"]
         == "original content"
     )
+
+    def test_concurrent_updates_do_not_corrupt_cache(
+    tmp_path,
+    ):
+        from concurrent.futures import ThreadPoolExecutor
+
+        repository_root = tmp_path / "repo"
+        repository_root.mkdir()
+
+        embedding_service = FakeEmbeddingService()
+
+        files = [
+            make_project_file(
+                repository_root / "a.py",
+                "aaa",
+            ),
+            make_project_file(
+                repository_root / "b.py",
+                "bbbb",
+            ),
+            make_project_file(
+                repository_root / "c.py",
+                "ccccc",
+            ),
+        ]
+
+        def run_update():
+            vector_store = InMemoryVectorStore()
+
+            manager = IncrementalIndexManager(
+                repository_root=repository_root,
+                chunker=FakeChunker(),
+                embedding_service=embedding_service,
+                vector_store=vector_store,
+            )
+
+            return manager.update(files)
+
+        with ThreadPoolExecutor(
+            max_workers=2
+        ) as executor:
+
+            results = list(
+                executor.map(
+                    lambda _: run_update(),
+                    range(2),
+                )
+            )
+
+        cache_path = (
+            repository_root.parent
+            / ".devmind"
+            / "repository_index.json"
+        )
+
+        assert cache_path.exists()
+
+        cache = json.loads(
+            cache_path.read_text(
+                encoding="utf-8"
+            )
+        )
+
+        assert cache["version"] == 1
+
+        assert set(
+            cache["files"].keys()
+        ) == {
+            "a.py",
+            "b.py",
+            "c.py",
+        }
+
+        assert len(results) == 2

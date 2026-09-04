@@ -1,6 +1,7 @@
 import hashlib
 import json
 from pathlib import Path
+from threading import Lock
 
 from app.project_knowledge.embeddings.base_embedding_service import (
     BaseEmbeddingService,
@@ -15,7 +16,8 @@ from app.project_knowledge.vectorstore.in_memory_vector_store import (
 class IncrementalIndexManager:
 
     CACHE_VERSION = 1
-
+    _cache_locks = {}
+    _cache_locks_lock = Lock()
     def __init__(
         self,
         repository_root: Path,
@@ -36,6 +38,19 @@ class IncrementalIndexManager:
         )
 
     def update(
+        self,
+        project_files: list[ProjectFile],
+    ) -> dict:
+
+        lock = self._get_cache_lock()
+        with lock:
+
+            return self._update_locked(
+                project_files
+            )
+
+
+    def _update_locked(
         self,
         project_files: list[ProjectFile],
     ) -> dict:
@@ -95,6 +110,7 @@ class IncrementalIndexManager:
             # New or modified file.
             if cached:
                 modified += 1
+
             else:
                 added += 1
 
@@ -178,6 +194,33 @@ class IncrementalIndexManager:
             "deleted": deleted,
             "failed": failed,
         }
+
+
+    # ------------------------------------------------------
+    # Concurrency
+    # ------------------------------------------------------
+
+    def _get_cache_lock(self) -> Lock:
+
+        cache_key = str(
+            self.cache_path.resolve()
+        )
+
+        with self._cache_locks_lock:
+
+            lock = self._cache_locks.get(
+                cache_key
+            )
+
+            if lock is None:
+                lock = Lock()
+
+                self._cache_locks[
+                    cache_key
+                ] = lock
+
+            return lock
+
 
     # ------------------------------------------------------
     # Hashing

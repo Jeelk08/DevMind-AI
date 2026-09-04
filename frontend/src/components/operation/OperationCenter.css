@@ -1,0 +1,129 @@
+/* =========================================================
+   DevMind — Operation Center
+   ========================================================= */
+
+.operation-center {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  min-width: 240px;
+  max-width: 320px;
+  padding: 11px 13px;
+
+  border:
+    1px solid
+    var(--dm-border);
+
+  border-radius: 12px;
+
+  background: var(--dm-surface);
+
+  box-shadow:
+    0 10px 30px
+    rgba(0, 0, 0, 0.22);
+
+  color: var(--dm-text-primary);
+
+  animation:
+    operation-center-enter 180ms ease;
+}
+
+.operation-center__indicator {
+  display: grid;
+  place-items: center;
+
+  width: 28px;
+  height: 28px;
+
+  flex-shrink: 0;
+
+  border-radius: 8px;
+
+  background: var(--dm-accent-muted);
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.operation-center--working
+  .operation-center__indicator {
+  color: var(--dm-accent);
+  animation:
+    operation-center-spin 1s linear infinite;
+}
+
+.operation-center--error
+  .operation-center__indicator {
+  color: var(--dm-error);
+  background: var(--dm-error-muted);
+}
+
+.operation-center--success
+  .operation-center__indicator {
+  color: var(--dm-success);
+  background: var(--dm-success-muted);
+}
+
+.operation-center__content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 2px;
+}
+
+.operation-center__title {
+  color: var(--dm-text-primary);
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+.operation-center__message {
+  overflow: hidden;
+
+  color: var(--dm-text-muted);
+
+  font-size: 10px;
+  line-height: 1.4;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@keyframes operation-center-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes operation-center-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 700px) {
+  .operation-center {
+    right: 14px;
+    bottom: 14px;
+
+    min-width: 0;
+    max-width: calc(100vw - 28px);
+  }
+}

@@ -12,6 +12,7 @@ class ProjectRepository:
         self.database = database
 
         self._create_table()
+        self._ensure_connected_column()
 
     def _create_table(self):
         with self.database.get_connection() as connection:
@@ -22,10 +23,12 @@ class ProjectRepository:
                     name TEXT NOT NULL,
                     repository_path TEXT NOT NULL,
                     created_at TEXT NOT NULL,
-                    updated_at TEXT NOT NULL
+                    updated_at TEXT NOT NULL,
+                    connected INTEGER NOT NULL DEFAULT 1
                 )
                 """
             )
+
             connection.execute(
                 """
                 CREATE UNIQUE INDEX IF NOT EXISTS
@@ -54,9 +57,10 @@ class ProjectRepository:
                     name,
                     repository_path,
                     created_at,
-                    updated_at
+                    updated_at,
+                    connected
                 )
-                VALUES (?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, 1)
                 """,
                 (
                     project_id,
@@ -68,7 +72,6 @@ class ProjectRepository:
             )
 
             connection.commit()
-
 
     def get_by_repository_path(
         self,
@@ -86,7 +89,6 @@ class ProjectRepository:
 
             return row
 
-            
     def get_by_id(
         self,
         project_id: str,
@@ -115,6 +117,50 @@ class ProjectRepository:
 
             return rows
 
+    def disconnect(
+        self,
+        project_id: str,
+    ):
+        with self.database.get_connection() as connection:
+            connection.execute(
+                """
+                UPDATE projects
+                SET connected = 0,
+                    updated_at = ?
+                WHERE id = ?
+                """,
+                (
+                    datetime.now(
+                        timezone.utc
+                    ).isoformat(),
+                    project_id,
+                ),
+            )
+
+            connection.commit()
+
+    def reconnect(
+        self,
+        project_id: str,
+    ):
+        with self.database.get_connection() as connection:
+            connection.execute(
+                """
+                UPDATE projects
+                SET connected = 1,
+                    updated_at = ?
+                WHERE id = ?
+                """,
+                (
+                    datetime.now(
+                        timezone.utc
+                    ).isoformat(),
+                    project_id,
+                ),
+            )
+
+            connection.commit()
+
     def delete(
         self,
         project_id: str,
@@ -123,6 +169,61 @@ class ProjectRepository:
             connection.execute(
                 """
                 DELETE FROM projects
+                WHERE id = ?
+                """,
+                (project_id,),
+            )
+
+            connection.commit()
+
+    def _ensure_connected_column(self) -> None:
+        with self.database.get_connection() as connection:
+            columns = connection.execute(
+                "PRAGMA table_info(projects)"
+            ).fetchall()
+
+            column_names = {
+                column[1]
+                for column in columns
+            }
+
+            if "connected" not in column_names:
+                connection.execute(
+                    """
+                    ALTER TABLE projects
+                    ADD COLUMN connected
+                    INTEGER NOT NULL DEFAULT 1
+                    """
+                )
+
+                connection.commit()
+
+    def disconnect(
+        self,
+        project_id: str,
+    ):
+        with self.database.get_connection() as connection:
+            connection.execute(
+                """
+                UPDATE projects
+                SET connected = 0
+                WHERE id = ?
+                """,
+                (project_id,),
+            )
+
+            connection.commit()
+
+
+    def reconnect(
+        self,
+        project_id: str,
+    ):
+        with self.database.get_connection() as connection:
+            connection.execute(
+                """
+                UPDATE projects
+                SET connected = 1
                 WHERE id = ?
                 """,
                 (project_id,),
