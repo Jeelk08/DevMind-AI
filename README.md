@@ -1,75 +1,147 @@
 # DevMind-AI
-An Agentic AI-powered second brain for developers to store knowledge, understand project context, and provide intelligent coding assistance.
+
+An Agentic AI-powered second brain for developers to understand projects, retain context, and provide intelligent coding assistance.
 
 # 🧠 DevMind AI
 
 ### Your AI-powered second brain for developers
 
-DevMind AI is an Agentic AI assistant designed to help developers store knowledge, understand their projects, and improve their coding workflow using long-term memory and intelligent AI agents.
+DevMind AI is an **Agentic AI assistant** built to understand developer projects, retain conversation context, retrieve relevant project knowledge, and provide context-aware coding assistance.
 
-Unlike normal chatbots that only answer questions, DevMind AI builds a personalized understanding of a developer's projects, previous problems, solutions, notes, and learning journey.
+Unlike conventional chatbots that rely mainly on the current conversation, DevMind AI combines **memory, project knowledge, RAG, repository intelligence, and intelligent retrieval** to build a deeper understanding of the developer's codebase.
 
 ---
 
-## 🚀 Features (Planned)
+## 🚀 Features
 
 ### 🧠 Developer Memory
-- Store programming notes and important concepts
-- Remember previous bugs and solutions
-- Save project decisions and explanations
+
+* Persistent conversation and session management
+* Retain previous discussions and project context
+* Store and retrieve relevant developer knowledge
 
 ### 📂 Project Context Understanding
-- Understand different codebases
-- Maintain project-specific knowledge
-- Retrieve relevant information when needed
 
-### 🤖 AI Developer Agent
-- Answer coding questions with personal context
-- Suggest improvements
-- Analyze developer workflow
-- Assist in debugging
+* Load and understand software repositories
+* Filter and process relevant project files
+* Maintain project-specific knowledge
+* Support isolated knowledge across multiple projects
 
-### 📚 Smart Knowledge Retrieval
-- Semantic search over saved knowledge
-- Context-aware responses using AI
-- Quick access to past learnings
+### 📚 RAG & Smart Retrieval
+
+* Chunk project source code into searchable knowledge
+* Generate embeddings using Gemini
+* Semantic retrieval of relevant project context
+* Symbol-aware and intelligent retrieval
+* Repository relationship analysis
+
+### 🤖 Agentic AI
+
+* Planner for deciding when tools are required
+* Modular tool-calling framework
+* Context-aware AI responses
+* Extensible agent architecture
+
+### ⚡ Incremental Indexing
+
+* Detect project changes
+* Avoid unnecessary re-indexing
+* Re-process only relevant project content
+* Reduce unnecessary embedding/API usage
+
+### 🔐 Secure Project Handling
+
+* Read-only project access
+* Default exclusion of sensitive/unnecessary files
+* Secret-aware indexing pipeline
+* Project context remains explicitly controlled
 
 ---
 
-## 🛠️ Tech Stack (Planned)
+## 🛠️ Tech Stack
 
 ### Frontend
-- React.js
-- Tailwind CSS
+
+* React.js
+* Vite
+* CSS
 
 ### Backend
-- Python / FastAPI
+
+* Python
+* FastAPI
+* SQLite
 
 ### AI & Agents
-- Large Language Models (LLMs)
-- LangChain / LangGraph
-- RAG (Retrieval Augmented Generation)
 
-### Database
-- Vector Database
-- MongoDB / PostgreSQL
+* Gemini / Google Generative AI
+* Embeddings
+* RAG (Retrieval-Augmented Generation)
+* Custom Agent Architecture
+* Planner & Tool Calling
+
+### Project Intelligence
+
+* Repository Analysis
+* Symbol Extraction
+* Relationship Graph
+* Intelligent Retrieval
+* Incremental Indexing
 
 ---
 
+## 🏗️ Architecture
+
+```text
+              Developer
+                  ↓
+              DevMind AI
+                  ↓
+┌───────────┬──────────────┬─────────────┐
+│  Memory   │   Projects   │    Tools    │
+└───────────┴──────────────┴─────────────┘
+                  ↓
+          Project Knowledge
+                  ↓
+       Indexing + Retrieval
+                  ↓
+        Relevant Context
+                  ↓
+             Gemini AI
+                  ↓
+              Response
+```
+
+---
 
 ## 🎯 Goal
 
-The goal of DevMind AI is to create a personalized AI teammate for developers that remembers, learns, and assists throughout their programming journey.
+The goal of DevMind AI is to create a **personal AI teammate for developers** that understands their projects, remembers relevant context, and provides intelligent assistance throughout the development process.
+
+Rather than replacing an IDE or development tools, DevMind is designed to act as an **intelligent context and reasoning layer around them**.
 
 ---
 
 ## 📅 Current Status
 
-🚧 Project is currently under development.
+🚧 **Actively under development**
 
-Week 1:
-- Project idea finalized
-- Research completed
-- Architecture planning started
+### Development Progress
+
+* ✅ Core Agent Architecture
+* ✅ Persistent Memory & Sessions
+* ✅ Tool Calling Framework
+* ✅ Planner
+* ✅ Project Knowledge Engine
+* ✅ RAG Pipeline
+* ✅ Repository Intelligence
+* ✅ Intelligent Retrieval
+* ✅ Incremental Indexing
+* 🚧 React/Vite Developer Workspace
+* 🚧 v1.0 Integration & Refinement
 
 ---
+
+## 🧠 DevMind AI
+
+> **Your codebase has context. Your AI should too.**
