@@ -4,8 +4,8 @@ import {
   loadConversations,
   saveConversations,
   loadActiveConversationId,
-  saveActiveConversationId,
-} from "./devmindstorage";
+  saveActiveConversationId
+} from "./devmindStorage";
 
 /* Owns conversation state, persistence, restoration and message sending. */
 function useConversations({
