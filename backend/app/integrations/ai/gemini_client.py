@@ -43,40 +43,61 @@ class GeminiClient(BaseAIClient):
 
         from .exceptions import AIRateLimitException
 
-        try:
-            response = self.client.models.generate_content(
-                model=CHAT_MODEL,
-                contents=prompt,
-            )
+        max_attempts = 3
 
-            if not response.text:
-                raise GeminiClientException(
-                    "Gemini returned an empty response."
+        for attempt in range(max_attempts):
+            try:
+                response = self.client.models.generate_content(
+                    model=CHAT_MODEL,
+                    contents=prompt,
                 )
 
-            return response.text
+                if not response.text:
+                    raise GeminiClientException(
+                        "Gemini returned an empty response."
+                    )
 
-        except Exception as exc:
-            error_message = str(exc)
+                return response.text
 
-            status_code = (
-                getattr(exc, "status_code", None)
-                or getattr(exc, "code", None)
-            )
+            except Exception as exc:
+                error_message = str(exc)
+                normalized = error_message.upper()
 
-            if (
-                status_code == 429
-                or "429" in error_message
-                or "RESOURCE_EXHAUSTED" in error_message
-            ):
-                raise AIRateLimitException(
-                    "Gemini API quota exhausted. "
-                    "Please try again after the quota resets."
+                status_code = (
+                    getattr(exc, "status_code", None)
+                    or getattr(exc, "code", None)
+                )
+
+                is_rate_limited = (
+                    status_code == 429
+                    or "429" in normalized
+                    or "RESOURCE_EXHAUSTED" in normalized
+                )
+
+                is_unavailable = (
+                    status_code == 503
+                    or "503" in normalized
+                    or "UNAVAILABLE" in normalized
+                )
+
+                if is_rate_limited:
+                    raise AIRateLimitException(
+                        "Gemini API quota exhausted or rate limit reached. "
+                        "Please try again later."
+                    ) from exc
+
+                if is_unavailable and attempt < max_attempts - 1:
+                    delay = 2 ** (attempt + 1)
+                    time.sleep(delay)
+                    continue
+
+                raise GeminiClientException(
+                    f"Failed to communicate with Gemini: {error_message}"
                 ) from exc
 
-            raise GeminiClientException(
-                f"Failed to communicate with Gemini: {error_message}"
-            ) from exc
+        raise GeminiClientException(
+            "Gemini request failed after multiple attempts."
+        )
 
     def create_embeddings(
         self,
