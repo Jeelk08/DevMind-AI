@@ -2,7 +2,34 @@
    DevMind — Global Styles
    ========================================================= */
 
-/* ---------- Box sizing ---------- */
+/* ---------- Font Faces ---------- */
+
+@font-face {
+  font-family: "Clash Display";
+  src: url("/fonts/ClashDisplay-Extralight.woff2") format("woff2");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Clash Display";
+  src: url("/fonts/ClashDisplay-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Clash Display";
+  src: url("/fonts/ClashDisplay-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+/* ---------- Box Sizing ---------- */
 
 *,
 *::before,
@@ -16,12 +43,16 @@
 html {
   width: 100%;
   height: 100%;
-  font-family: var(--dm-font-ui);
+
+  font-family: "Clash Display", sans-serif;
   font-size: 16px;
   line-height: var(--dm-line-normal);
+
   color: var(--dm-text-primary);
   background: var(--dm-bg-primary);
+
   color-scheme: dark;
+
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -31,7 +62,12 @@ body {
   width: 100%;
   min-width: 320px;
   min-height: 100vh;
+
   margin: 0;
+
+  font-family: "Clash Display", sans-serif;
+  font-weight: 300;
+
   background: var(--dm-bg-primary);
   color: var(--dm-text-primary);
 }
@@ -61,12 +97,37 @@ h4,
 h5,
 h6 {
   line-height: var(--dm-line-tight);
-  font-weight: 600;
+  font-weight: 400;
 }
 
 p {
   line-height: var(--dm-line-relaxed);
+  font-weight: 300;
 }
+
+/* ---------- Clash Display Letter Spacing ---------- */
+
+body {
+  letter-spacing: 0.040em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  letter-spacing: 0.1em;
+}
+
+button,
+input,
+textarea,
+select {
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Code Typography ---------- */
 
 code,
 pre,
@@ -84,13 +145,15 @@ a {
 }
 
 
-/* ---------- Buttons & form controls ---------- */
+/* ---------- Buttons & Form Controls ---------- */
 
 button,
 input,
 textarea,
 select {
-  font: inherit;
+  font-family: inherit;
+  font-weight: 300;
+  font-size: inherit;
 }
 
 button {
@@ -181,19 +244,6 @@ svg {
 }
 
 
-/* ---------- Reduced motion ---------- */
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
 /* =========================================================
    DevMind — Button System
    ========================================================= */
@@ -204,9 +254,11 @@ svg {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   gap: var(--dm-space-2);
 
   min-height: 36px;
+
   padding:
     var(--dm-space-2)
     var(--dm-space-3);
@@ -217,8 +269,9 @@ svg {
   color: var(--dm-text-primary);
   background: var(--dm-surface);
 
+  font-family: "Clash Display", sans-serif;
   font-size: var(--dm-text-sm);
-  font-weight: 600;
+  font-weight: 300;
   line-height: 1;
 
   cursor: pointer;
@@ -313,6 +366,7 @@ svg {
 
 .dm-button--sm {
   min-height: 30px;
+
   padding:
     var(--dm-space-1)
     var(--dm-space-2);
@@ -326,6 +380,7 @@ svg {
 
 .dm-button--lg {
   min-height: 42px;
+
   padding:
     var(--dm-space-3)
     var(--dm-space-4);
@@ -334,12 +389,13 @@ svg {
 }
 
 
-/* ---------- Icon button ---------- */
+/* ---------- Icon Button ---------- */
 
 .dm-button--icon {
   width: 36px;
   height: 36px;
   min-height: 36px;
+
   padding: 0;
   border-radius: var(--dm-radius-md);
 }
@@ -357,8 +413,22 @@ svg {
 }
 
 
-/* ---------- Full width ---------- */
+/* ---------- Full Width ---------- */
 
 .dm-button--full {
   width: 100%;
+}
+
+
+/* ---------- Reduced Motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -26,13 +26,16 @@ _repository_context_tools_lock = Lock()
 
 def get_repository_context_tool(
     project_id: str,
+    auto_index: bool = True,
 ) -> RepositoryContextTool:
 
-    # Fast path: already initialized.
+    # Fast path: reuse an existing tool. If it was deliberately created
+    # without indexing, a normal caller must finish initialization.
     if project_id in _repository_context_tools:
-        return _repository_context_tools[
-            project_id
-        ]
+        tool = _repository_context_tools[project_id]
+        if auto_index and not tool.is_indexed:
+            tool.refresh_index()
+        return tool
 
     # Only one request may initialize a missing project tool
     # at a time. This prevents concurrent repository indexing
@@ -42,9 +45,10 @@ def get_repository_context_tool(
         # Check again after acquiring the lock because another
         # request may have initialized the tool while we waited.
         if project_id in _repository_context_tools:
-            return _repository_context_tools[
-                project_id
-            ]
+            tool = _repository_context_tools[project_id]
+            if auto_index and not tool.is_indexed:
+                tool.refresh_index()
+            return tool
 
         repository_root = (
             project_registry.get_repository_root(
@@ -54,8 +58,8 @@ def get_repository_context_tool(
 
         tool = RepositoryContextTool(
             repository_root=repository_root,
+            auto_index=auto_index,
         )
-
         _repository_context_tools[
             project_id
         ] = tool

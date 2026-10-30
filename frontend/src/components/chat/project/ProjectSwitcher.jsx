@@ -98,7 +98,11 @@ function ProjectSwitcher({
       >
         <div className="project-switcher__trigger">
           <span className="project-switcher__icon">
-            🧠
+            <img
+              src="/devmind-brain.png"
+              alt="DevMind"
+              className="devmind-brain-icon"
+            />
           </span>
 
           <span className="project-switcher__info">
@@ -165,7 +169,11 @@ function ProjectSwitcher({
         aria-haspopup="menu"
       >
         <span className="project-switcher__icon">
-          🧠
+          <img
+            src="/devmind-brain1.png"
+            alt="DevMind"
+            className="devmind-brain-icon"
+          />
         </span>
 
         <span className="project-switcher__info">

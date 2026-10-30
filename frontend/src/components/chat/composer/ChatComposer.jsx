@@ -269,7 +269,12 @@ function ChatComposer({
                   : "Show context"
               }
             >
-              🧠 Context
+              <img
+                src="/devmind-brain1.png"
+                alt=""
+                className="devmind-brain-icon"
+              />
+              Context
             </button>
           </div>
 

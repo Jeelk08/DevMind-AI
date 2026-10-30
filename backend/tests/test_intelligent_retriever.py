@@ -89,3 +89,40 @@ def test_intelligent_retriever_ranks_semantic_results_by_score():
 
     assert results[0].path == Path("high.py")
     assert results[1].path == Path("low.py")
+
+def test_intelligent_retriever_prioritizes_explicit_file_reference():
+    from pathlib import Path
+    from app.project_knowledge.models import ProjectFile
+    from app.project_knowledge.retriever.path_retriever import PathRetriever
+
+    class NoSemanticResults:
+        def retrieve(self, query: str, top_k: int):
+            return []
+
+    files = [
+        ProjectFile(
+            path=Path("frontend/src/hooks/useDevMind.js"),
+            content="import React from 'react';\nexport function useDevMind() {}",
+        ),
+        ProjectFile(
+            path=Path("frontend/src/hooks/useChat.js"),
+            content="export function useChat() {}",
+        ),
+    ]
+
+    retriever = IntelligentRetriever(
+        semantic_retriever=NoSemanticResults(),
+        symbol_retriever=FakePathRetriever(),
+        path_retriever=PathRetriever(files),
+    )
+
+    results = retriever.retrieve_with_scores(
+        "What imports does useDevMind.js use?",
+        top_k=3,
+    )
+
+    assert results
+    assert results[0][0].path == Path(
+        "frontend/src/hooks/useDevMind.js"
+    )
+    assert results[0][1] == 1.0

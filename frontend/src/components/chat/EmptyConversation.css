@@ -62,3 +62,8 @@
   font-size: var(--dm-text-sm);
   line-height: var(--dm-line-normal);
 }
+
+.empty-conversation__icon .devmind-brain-icon .empty-conversation__icon{
+  width: 30px;
+  height: 30px;
+}

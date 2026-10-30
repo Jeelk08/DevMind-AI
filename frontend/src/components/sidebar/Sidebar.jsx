@@ -74,16 +74,17 @@ function Sidebar() {
       <header className="sidebar__header">
         <div className="sidebar__brand">
           <div className="sidebar__brand-mark">
-            D
+             <img
+                src="/devmind-dm.png"
+                alt="DevMind"
+                className="sidebar__brand-logo"
+              />
           </div>
 
           <div className="sidebar__brand-text">
             <span className="sidebar__brand-name">
-              DevMind
-            </span>
-
-            <span className="sidebar__brand-subtitle">
-              AI Second Brain
+              <span>DevMind</span>
+              <span className="sidebar__brand-ai">AI</span>
             </span>
           </div>
         </div>
@@ -261,7 +262,11 @@ function Sidebar() {
             {projects.length === 0 ? (
               <div className="sidebar__item">
                 <span className="sidebar__item-icon">
-                  🧠
+                  <img
+                    src="/devmind-brain1.png"
+                    alt="DevMind"
+                    className="devmind-brain-icon"
+                  />
                 </span>
 
                 <span className="sidebar__item-label">
@@ -290,7 +295,11 @@ function Sidebar() {
                     }
                   >
                     <span className="sidebar__item-icon">
-                      🧠
+                      <img
+                        src="/devmind-brain1.png"
+                        alt="DevMind"
+                        className="devmind-brain-icon"
+                      />
                     </span>
 
                     <span className="sidebar__item-label">
@@ -303,47 +312,8 @@ function Sidebar() {
           </div>
         </section>
 
-        {/* General */}
-        <section className="sidebar__section">
-          <h2 className="sidebar__section-title">
-            General
-          </h2>
-
-          <div className="sidebar__items">
-            <button
-              type="button"
-              className="sidebar__item"
-            >
-              <span className="sidebar__item-label">
-                FastAPI question
-              </span>
-            </button>
-
-            <button
-              type="button"
-              className="sidebar__item"
-            >
-              <span className="sidebar__item-label">
-                Python help
-              </span>
-            </button>
-          </div>
-        </section>
       </nav>
 
-      {/* Bottom */}
-      <footer className="sidebar__footer">
-        <button
-          type="button"
-          className="sidebar__settings"
-        >
-          <span className="sidebar__settings-icon">
-            ⚙
-          </span>
-
-          <span>Settings</span>
-        </button>
-      </footer>
       {isAddProjectOpen && (
         <AddProjectModal
           onClose={() =>

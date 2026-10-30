@@ -8,7 +8,15 @@ function ContextSource({
   return (
     <article className="context-source">
       <div className="context-source__icon">
-        {type === "file" ? "📄" : "🧠"}
+        {type === "file" ? (
+          "📄"
+        ) : (
+          <img
+            src="/devmind-brain.png"
+            alt="DevMind"
+            className="devmind-brain-icon"
+          />
+        )}
       </div>
 
       <div className="context-source__info">

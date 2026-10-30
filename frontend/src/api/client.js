@@ -535,3 +535,63 @@ export async function removeProject(projectId) {
     );
   }
 }
+
+
+export async function importProjectFromFolder(name, selectedFiles, onProgress) {
+  if (!name || !Array.isArray(selectedFiles) || selectedFiles.length === 0) {
+    throw new Error("A project name and at least one supported file are required.");
+  }
+
+  const formData = new FormData();
+  formData.append("name", name);
+
+  for (const item of selectedFiles) {
+    formData.append("files", item.file, item.relativePath);
+    formData.append("relative_paths", item.relativePath);
+  }
+
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", `${API_BASE_URL}/projects/import`);
+
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        onProgress?.({
+          phase: "uploading",
+          loaded: event.loaded,
+          total: event.total,
+          percent: (event.loaded / event.total) * 100,
+        });
+        if (event.loaded >= event.total) {
+          // The request body has reached the backend. The endpoint then saves
+          // the files and builds the initial repository index before responding.
+          onProgress?.({ phase: "indexing" });
+        }
+      }
+    };
+
+    xhr.onerror = () => reject(
+      new Error("Unable to connect to DevMind. Make sure the backend is running.")
+    );
+
+    xhr.onload = () => {
+      let data = {};
+      try {
+        data = xhr.responseText ? JSON.parse(xhr.responseText) : {};
+      } catch {
+        reject(new Error("DevMind returned an invalid folder-import response."));
+        return;
+      }
+
+      if (xhr.status < 200 || xhr.status >= 300) {
+        reject(new Error(data?.detail || "Failed to import the selected folder."));
+        return;
+      }
+
+      resolve(data);
+    };
+
+    xhr.onabort = () => reject(new Error("Folder import was cancelled."));
+    xhr.send(formData);
+  });
+}

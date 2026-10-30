@@ -37,7 +37,8 @@ class DevMindAgent:
 
         request = self.planner.plan(
             message,
-            session_id
+            session_id,
+            project_id,
         )
 
 # ==============================
@@ -67,12 +68,25 @@ class DevMindAgent:
                     )
                 )
 
+            history = self.memory.get_history(
+                session_id
+            )
+
             if tool_response.error:
-                history = self.memory.get_history(
-                    session_id
-                )
-            else:
-                history = tool_response.result
+                # Keep the conversation intact and let the model explain
+                # that repository retrieval failed instead of silently
+                # answering as if it had inspected the project.
+                history.append({
+                    "role": "user",
+                    "content": (
+                        "Repository retrieval could not be completed. "
+                        f"Retrieval error: {tool_response.error}"
+                    ),
+                })
+            elif tool_response.result:
+                # Add retrieved project context to the existing conversation
+                # rather than replacing prior turns. This preserves follow-ups.
+                history.extend(tool_response.result)
 
         else:
 

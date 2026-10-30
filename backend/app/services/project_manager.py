@@ -461,7 +461,8 @@ class ProjectManager:
 
         context_tool = (
             get_repository_context_tool(
-                project_id
+                project_id,
+                auto_index=False,
             )
         )
 

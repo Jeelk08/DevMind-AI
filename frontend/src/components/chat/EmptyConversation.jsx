@@ -4,7 +4,11 @@ function EmptyConversation() {
   return (
     <div className="empty-conversation">
       <div className="empty-conversation__icon">
-        🧠
+        <img
+          src="/devmind-brain1.png"
+          alt="DevMind"
+          className="devmind-brain-icon"
+        />
       </div>
 
       <h2 className="empty-conversation__title">

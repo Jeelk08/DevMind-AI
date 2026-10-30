@@ -1,29 +1,63 @@
 from pathlib import Path
+import re
 
 from app.project_knowledge.models import ProjectFile
 
 
 class PathRetriever:
+    """Find project files explicitly referenced by a natural-language query."""
+
     def __init__(self, files: list[ProjectFile]):
         self.files = files
 
-    def retrieve(self, query: str) -> list[ProjectFile]:
-        query = query.strip().lower()
+    @staticmethod
+    def _normalise(value: str) -> str:
+        return value.replace("\\", "/").strip().lower()
 
-        if not query:
+    def retrieve_with_match_type(
+        self, query: str
+    ) -> list[tuple[ProjectFile, bool]]:
+        """Return (file, exact_reference) pairs, exact references first."""
+        query_normalised = self._normalise(query)
+        if not query_normalised:
             return []
 
-        results = []
+        exact: list[ProjectFile] = []
+        partial: list[ProjectFile] = []
 
         for project_file in self.files:
-            path = str(project_file.path).lower()
-            filename = project_file.path.name.lower()
+            path = self._normalise(str(project_file.path))
+            filename = self._normalise(project_file.path.name)
 
-            if query == path or query == filename:
-                results.append(project_file)
-                continue
+            # An exact path or filename explicitly appears in the question.
+            path_mentioned = path and path in query_normalised
+            filename_pattern = rf"(?<![\w.-]){re.escape(filename)}(?![\w.-])"
+            filename_mentioned = bool(
+                re.search(filename_pattern, query_normalised)
+            )
 
-            if filename in query:
-                results.append(project_file)
+            if query_normalised == path or query_normalised == filename:
+                exact.append(project_file)
+            elif path_mentioned or filename_mentioned:
+                exact.append(project_file)
+            elif filename and filename in query_normalised:
+                partial.append(project_file)
 
+        # Keep deterministic order and avoid duplicates.
+        results: list[tuple[ProjectFile, bool]] = []
+        seen: set[str] = set()
+        for item, is_exact in (
+            [(item, True) for item in exact]
+            + [(item, False) for item in partial]
+        ):
+            key = self._normalise(str(item.path))
+            if key not in seen:
+                results.append((item, is_exact))
+                seen.add(key)
         return results
+
+    def retrieve(self, query: str) -> list[ProjectFile]:
+        return [
+            project_file
+            for project_file, _ in self.retrieve_with_match_type(query)
+        ]

@@ -1,3 +1,4 @@
+
 import hashlib
 import json
 from pathlib import Path
@@ -16,8 +17,10 @@ from app.project_knowledge.vectorstore.in_memory_vector_store import (
 class IncrementalIndexManager:
 
     CACHE_VERSION = 1
+
     _cache_locks = {}
     _cache_locks_lock = Lock()
+
     def __init__(
         self,
         repository_root: Path,
@@ -37,18 +40,51 @@ class IncrementalIndexManager:
             / "repository_index.json"
         )
 
+        self.embedding_fingerprint = (
+            self._get_embedding_fingerprint()
+        )
+
+    # ------------------------------------------------------
+    # Embedding identity
+    # ------------------------------------------------------
+
+    def _get_embedding_fingerprint(self) -> str:
+        """
+        Identify the embedding provider and model.
+
+        Services with an explicit fingerprint should provide it.
+        Otherwise, use a stable class-based fallback.
+        """
+
+        fingerprint = getattr(
+            self.embedding_service,
+            "fingerprint",
+            None,
+        )
+
+        if fingerprint:
+            return str(fingerprint)
+
+        service_class = self.embedding_service.__class__
+
+        return (
+            f"{service_class.__module__}."
+            f"{service_class.__qualname__}"
+        )
+
+    # ------------------------------------------------------
+    # Update
+    # ------------------------------------------------------
+
     def update(
         self,
         project_files: list[ProjectFile],
     ) -> dict:
 
         lock = self._get_cache_lock()
+
         with lock:
-
-            return self._update_locked(
-                project_files
-            )
-
+            return self._update_locked(project_files)
 
     def _update_locked(
         self,
@@ -61,7 +97,32 @@ class IncrementalIndexManager:
         }
 
         cache = self._load_cache()
+
+        cached_fingerprint = cache.get(
+            "embedding_fingerprint"
+        )
+
         cached_files = cache.get("files", {})
+
+        # --------------------------------------------------
+        # Detect embedding-model changes
+        # --------------------------------------------------
+
+        fingerprint_changed = (
+            cached_fingerprint != self.embedding_fingerprint
+        )
+
+        if fingerprint_changed:
+            print(
+                "\nEmbedding model fingerprint changed."
+            )
+            print(
+                "Invalidating old embedding cache and re-indexing."
+            )
+
+            # Old vectors cannot safely be reused with a different
+            # embedding model. Start with an empty cache.
+            cached_files = {}
 
         indexed = 0
         reused = 0
@@ -70,8 +131,6 @@ class IncrementalIndexManager:
         deleted = 0
         failed = 0
 
-        # Build the complete vector set for the CURRENT project state.
-        # We only replace the vector store after all files have been processed.
         final_chunks: list[EmbeddedChunk] = []
         new_cache: dict[str, dict] = {}
 
@@ -95,35 +154,38 @@ class IncrementalIndexManager:
 
             cached = cached_files.get(path)
 
-            # Existing and unchanged -> reuse cached embeddings.
-            if cached and cached["hash"] == current_hash:
+            # Reuse only when the content and embedding model
+            # both match the existing cache.
+            if cached and cached.get("hash") == current_hash:
 
                 embedded_chunks = self._deserialize_chunks(
-                    cached["chunks"]
+                    cached.get("chunks", [])
                 )
 
                 final_chunks.extend(embedded_chunks)
                 new_cache[path] = cached
                 reused += 1
+
                 continue
 
             # New or modified file.
             if cached:
                 modified += 1
-
             else:
                 added += 1
 
             try:
+
                 chunks = self.chunker.chunk(project_file)
 
-                # File produced no chunks. It is still considered
-                # successfully processed, but there is nothing to store.
+                # A file with no chunks is still successfully indexed.
                 if not chunks:
+
                     new_cache[path] = {
                         "hash": current_hash,
                         "chunks": [],
                     }
+
                     indexed += 1
                     continue
 
@@ -132,6 +194,11 @@ class IncrementalIndexManager:
                         chunks
                     )
                 )
+
+                if len(embedded_chunks) != len(chunks):
+                    raise ValueError(
+                        "Embedding count does not match chunk count."
+                    )
 
                 final_chunks.extend(embedded_chunks)
 
@@ -154,20 +221,19 @@ class IncrementalIndexManager:
                 print(type(e).__name__)
                 print(e)
 
-                # If a previously indexed file failed to update,
-                # preserve its old knowledge and old cache entry.
-                # This prevents a temporary embedding/API failure
-                # from destroying otherwise valid project knowledge.
-                if cached:
+                # Preserve old vectors only if the embedding
+                # fingerprint is unchanged.
+                if cached and not fingerprint_changed:
+
                     old_chunks = self._deserialize_chunks(
-                        cached["chunks"]
+                        cached.get("chunks", [])
                     )
 
                     final_chunks.extend(old_chunks)
                     new_cache[path] = cached
 
         # --------------------------------------------------
-        # Replace vector store with the exact current state
+        # Replace vector store
         # --------------------------------------------------
 
         self.vector_store.clear()
@@ -182,6 +248,7 @@ class IncrementalIndexManager:
         self._save_cache(
             {
                 "version": self.CACHE_VERSION,
+                "embedding_fingerprint": self.embedding_fingerprint,
                 "files": new_cache,
             }
         )
@@ -195,7 +262,6 @@ class IncrementalIndexManager:
             "failed": failed,
         }
 
-
     # ------------------------------------------------------
     # Concurrency
     # ------------------------------------------------------
@@ -208,19 +274,13 @@ class IncrementalIndexManager:
 
         with self._cache_locks_lock:
 
-            lock = self._cache_locks.get(
-                cache_key
-            )
+            lock = self._cache_locks.get(cache_key)
 
             if lock is None:
                 lock = Lock()
-
-                self._cache_locks[
-                    cache_key
-                ] = lock
+                self._cache_locks[cache_key] = lock
 
             return lock
-
 
     # ------------------------------------------------------
     # Hashing
@@ -258,13 +318,9 @@ class IncrementalIndexManager:
         return [
             {
                 "content": embedded_chunk.chunk.content,
-                "path": str(
-                    embedded_chunk.chunk.path
-                ),
-                "start_offset":
-                    embedded_chunk.chunk.start_offset,
-                "end_offset":
-                    embedded_chunk.chunk.end_offset,
+                "path": str(embedded_chunk.chunk.path),
+                "start_offset": embedded_chunk.chunk.start_offset,
+                "end_offset": embedded_chunk.chunk.end_offset,
                 "vector": embedded_chunk.vector,
             }
             for embedded_chunk in embedded_chunks
@@ -299,6 +355,7 @@ class IncrementalIndexManager:
         if not self.cache_path.exists():
             return {
                 "version": self.CACHE_VERSION,
+                "embedding_fingerprint": None,
                 "files": {},
             }
 
@@ -312,9 +369,9 @@ class IncrementalIndexManager:
                 cache = json.load(file)
 
             if cache.get("version") != self.CACHE_VERSION:
-
                 return {
                     "version": self.CACHE_VERSION,
+                    "embedding_fingerprint": None,
                     "files": {},
                 }
 
@@ -328,6 +385,7 @@ class IncrementalIndexManager:
 
             return {
                 "version": self.CACHE_VERSION,
+                "embedding_fingerprint": None,
                 "files": {},
             }
 
@@ -338,9 +396,7 @@ class IncrementalIndexManager:
             exist_ok=True,
         )
 
-        temporary_path = self.cache_path.with_suffix(
-            ".tmp"
-        )
+        temporary_path = self.cache_path.with_suffix(".tmp")
 
         with temporary_path.open(
             "w",

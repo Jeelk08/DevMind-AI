@@ -12,6 +12,7 @@ class RetrievalCandidate:
     semantic_score: float = 0.0
     symbol_match: bool = False
     path_match: bool = False
+    exact_path_match: bool = False
 
     @property
     def final_score(self) -> float:
@@ -22,6 +23,10 @@ class RetrievalCandidate:
 
         if self.path_match:
             score += 0.3
+
+        # An explicitly named file is stronger evidence than semantic similarity.
+        if self.exact_path_match:
+            score += 2.0
 
         return score
 
@@ -112,32 +117,40 @@ class IntelligentRetriever:
 
             symbol_paths.add(path)
 
-        # 2. Path matches
-        for project_file in self.path_retriever.retrieve(
-            query
-        ):
+        # 2. Explicit file/path matches. Prefer the richer match API when
+        # available, while remaining compatible with older PathRetriever fakes.
+        if hasattr(self.path_retriever, "retrieve_with_match_type"):
+            path_results = self.path_retriever.retrieve_with_match_type(query)
+        else:
+            path_results = [
+                (project_file, False)
+                for project_file in self.path_retriever.retrieve(query)
+            ]
+
+        for project_file, exact_match in path_results:
             path = str(project_file.path)
 
             chunk = Chunk(
                 content=project_file.content,
                 path=project_file.path,
                 start_offset=0,
-                end_offset=len(
-                    project_file.content
-                ),
+                end_offset=len(project_file.content),
             )
 
             key = self._chunk_key(chunk)
 
             if key in candidates:
                 candidates[key].path_match = True
+                candidates[key].exact_path_match = (
+                    candidates[key].exact_path_match or exact_match
+                )
                 continue
 
             candidates[key] = RetrievalCandidate(
                 chunk=chunk,
                 path_match=True,
+                exact_path_match=exact_match,
             )
-
             path_matches.add(path)
 
         # 3. Semantic retrieval

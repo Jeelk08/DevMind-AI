@@ -382,3 +382,12 @@
 .project-switcher__connection-action--reconnect:hover:not(:disabled) {
   background: var(--dm-accent-muted);
 }
+
+
+.devmind-brain-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  display: inline-block;
+  vertical-align: middle;
+}

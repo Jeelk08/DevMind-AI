@@ -1,41 +1,60 @@
-# Python
+# ==========================================
+# PYTHON
+# ==========================================
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
 
-# Virtual environment
+# ==========================================
+# VIRTUAL ENVIRONMENTS
+# ==========================================
 venv/
-backend/venv/
+.venv/
+env/
 
-# Environment variables
-.env
-
-# VS Code
-.vscode/
-
-# Node (future frontend)
-node_modules/
-dist/
-
-# OS files
-.DS_Store
-
-# DevMind generated repository cache
-.devmind/
-
-# Python cache
-__pycache__/
-*.pyc
-
-# Python virtual environment
-venv/
-
-# Frontend dependencies
-node_modules/
-
-# Environment / secrets
+# ==========================================
+# ENVIRONMENT VARIABLES / SECRETS
+# ==========================================
 .env
 .env.*
+!.env.example
+!.env.*.example
 
+# ==========================================
+# FRONTEND / NODE
+# ==========================================
+node_modules/
+dist/
+.vite/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
 
-# DevMind runtime database
+# ==========================================
+# IDE / EDITOR
+# ==========================================
+.vscode/
+.idea/
+
+# ==========================================
+# OS FILES
+# ==========================================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==========================================
+# DEVMIND RUNTIME DATA
+# ==========================================
+.devmind/
+backend/data/imported_projects/
 backend/app/database/devmind.db
+
+# ==========================================
+# LOGS
+# ==========================================
+*.log

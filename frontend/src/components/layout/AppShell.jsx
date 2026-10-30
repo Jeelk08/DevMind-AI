@@ -4,7 +4,6 @@ import "./AppShell.css";
 import Sidebar from "../sidebar/Sidebar";
 import ChatWorkspace from "../chat/ChatWorkspace";
 import ContextPanel from "../context/ContextPanel";
-import OperationCenter from "../operation/OperationCenter";
 function AppShell() {
   const [isContextOpen, setIsContextOpen] =
     useState(true);
@@ -41,8 +40,6 @@ function AppShell() {
         </aside>
       )}
 
-      {/* Operation center */}
-      <OperationCenter />
     </div>
   );
 }

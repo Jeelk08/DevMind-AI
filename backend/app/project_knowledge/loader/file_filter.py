@@ -32,18 +32,41 @@ class FileFilter:
     }
 
     SUPPORTED_EXTENSIONS = {
+        # Python
         ".py",
-        ".java",
+
+        # JavaScript / TypeScript
         ".js",
-        ".ts",
         ".jsx",
+        ".ts",
         ".tsx",
+
+        # C / C++
+        ".c",
+        ".h",
+        ".cc",
+        ".cpp",
+        ".cxx",
+        ".hpp",
+        ".hh",
+        ".hxx",
+
+        # Java
+        ".java",
+
+        # Web
         ".html",
         ".css",
+        ".scss",
+
+        # Structured data
         ".json",
-        ".md",
+        ".xml",
         ".yml",
         ".yaml",
+
+        # Documentation
+        ".md",
     }
 
     def should_ignore(self, path: Path) -> bool:
@@ -54,4 +77,7 @@ class FileFilter:
         if path.name in self.IGNORED_FILES:
             return True
 
-        return path.suffix.lower() not in self.SUPPORTED_EXTENSIONS
+        return (
+            path.suffix.lower()
+            not in self.SUPPORTED_EXTENSIONS
+        )

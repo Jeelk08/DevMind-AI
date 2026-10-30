@@ -1,129 +1,143 @@
-/* =========================================================
-   DevMind — Operation Center
-   ========================================================= */
-
+/* Compact Dynamic-Island-inspired activity notification, anchored below the workspace header. */
 .operation-center {
-  position: fixed;
-  right: 24px;
-  bottom: 24px;
-  z-index: 1000;
+  position: relative;
+  z-index: 20;
+  align-self: center;
+  width: min(560px, calc(100% - 32px));
+  margin: 10px auto 0;
+  overflow: hidden;
+  border: 1px solid var(--dm-border);
+  border-radius: 16px;
+  color: var(--dm-text-primary);
+  background: color-mix(in srgb, var(--dm-surface) 94%, #090b12);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .28);
+  animation: operation-center-enter 220ms cubic-bezier(.2,.8,.2,1);
+  backdrop-filter: blur(18px);
+}
 
+.operation-center__main {
   display: flex;
   align-items: center;
-  gap: 10px;
-
-  min-width: 240px;
-  max-width: 320px;
-  padding: 11px 13px;
-
-  border:
-    1px solid
-    var(--dm-border);
-
-  border-radius: 12px;
-
-  background: var(--dm-surface);
-
-  box-shadow:
-    0 10px 30px
-    rgba(0, 0, 0, 0.22);
-
-  color: var(--dm-text-primary);
-
-  animation:
-    operation-center-enter 180ms ease;
+  gap: 11px;
+  width: 100%;
+  min-height: 54px;
+  padding: 9px 13px;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
 }
 
 .operation-center__indicator {
   display: grid;
   place-items: center;
-
-  width: 28px;
-  height: 28px;
-
-  flex-shrink: 0;
-
-  border-radius: 8px;
-
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  border-radius: 10px;
+  color: var(--dm-accent);
   background: var(--dm-accent-muted);
-
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
 }
 
-.operation-center--working
-  .operation-center__indicator {
-  color: var(--dm-accent);
-  animation:
-    operation-center-spin 1s linear infinite;
-}
-
-.operation-center--error
-  .operation-center__indicator {
+.operation-center--error .operation-center__indicator {
   color: var(--dm-error);
   background: var(--dm-error-muted);
 }
-
-.operation-center--success
-  .operation-center__indicator {
+.operation-center--success .operation-center__indicator {
   color: var(--dm-success);
   background: var(--dm-success-muted);
 }
 
+.operation-center__spinner {
+  width: 15px;
+  height: 15px;
+  border: 2px solid color-mix(in srgb, var(--dm-accent) 25%, transparent);
+  border-top-color: var(--dm-accent);
+  border-radius: 50%;
+  animation: operation-center-spin .8s linear infinite;
+}
+
 .operation-center__content {
   display: flex;
+  flex: 1;
   flex-direction: column;
   min-width: 0;
-  gap: 2px;
+  gap: 3px;
 }
-
 .operation-center__title {
-  color: var(--dm-text-primary);
-  font-size: 11px;
-  line-height: 1.4;
-  font-weight: 600;
-}
-
-.operation-center__message {
   overflow: hidden;
-
-  color: var(--dm-text-muted);
-
-  font-size: 10px;
-  line-height: 1.4;
-
+  color: var(--dm-text-primary);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.35;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
+.operation-center__message {
+  overflow: hidden;
+  color: var(--dm-text-muted);
+  font-size: 10px;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.operation-center__percent {
+  color: var(--dm-text-secondary);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.operation-center__chevron {
+  color: var(--dm-text-muted);
+  font-size: 14px;
+}
+.operation-center__track {
+  height: 2px;
+  overflow: hidden;
+  background: var(--dm-border-subtle);
+}
+.operation-center__track-indeterminate {
+  display: block;
+  width: 36%;
+  height: 100%;
+  border-radius: 99px;
+  background: var(--dm-accent);
+  animation: operation-center-travel 1.35s ease-in-out infinite;
+}
+.operation-center__track-fill {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+  background: var(--dm-accent);
+  transition: width 140ms ease;
+}
+.operation-center__details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  padding: 9px 14px 11px 54px;
+  border-top: 1px solid var(--dm-border-subtle);
+  color: var(--dm-text-muted);
+  font-size: 10px;
+}
+.operation-center__phase {
+  color: var(--dm-text-secondary);
+  text-transform: capitalize;
+}
 @keyframes operation-center-enter {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-7px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
-
-@keyframes operation-center-spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
+@keyframes operation-center-spin { to { transform: rotate(360deg); } }
+@keyframes operation-center-travel {
+  0% { transform: translateX(-110%); }
+  100% { transform: translateX(290%); }
 }
-
-@media (max-width: 700px) {
-  .operation-center {
-    right: 14px;
-    bottom: 14px;
-
-    min-width: 0;
-    max-width: calc(100vw - 28px);
-  }
+@media (max-width: 600px) {
+  .operation-center { width: calc(100% - 20px); margin-top: 7px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .operation-center, .operation-center__spinner, .operation-center__track-indeterminate { animation: none; }
 }
